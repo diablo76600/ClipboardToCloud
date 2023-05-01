@@ -1,3 +1,4 @@
+
 # -*- Coding: utf-8 -*-
 # Modified by Diablo76 on 01/05/2023 -- 10:31:02.
 
@@ -180,3 +181,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     manager = ClipboardToCloudManager()
     sys.exit(app.exec_())
+
