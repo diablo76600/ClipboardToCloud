@@ -1,6 +1,11 @@
 
 # -*- Coding: utf-8 -*-
+
+# Created by Diablo76 on 14/02/2023 -- 07:41:27.
+# Mdified on 01/05/2023.
+
 # Modified by Diablo76 on 01/05/2023 -- 10:31:02.
+
 
 import os
 import sys
@@ -181,4 +186,3 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     manager = ClipboardToCloudManager()
     sys.exit(app.exec_())
-
