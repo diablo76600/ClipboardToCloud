@@ -3,7 +3,6 @@
 
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
 # Mdified on 01/05/2023.
-
 # Modified by Diablo76 on 01/05/2023 -- 10:31:02.
 
 
@@ -23,7 +22,7 @@ from PyQt5.QtWidgets import (
 )
 
 # Constantes globales
-VERSION = "1.07"
+VERSION = "1.09"
 CLOUD = "Dropbox"
 HOME = os.path.expanduser("~")
 PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
