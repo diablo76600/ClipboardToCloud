@@ -1,6 +1,6 @@
 # -*- Coding: utf-8 -*-
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
-# Modified on 01/04/2023.
+# Modified on 01/05/2023.
 
 import os
 import sys
@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import (
 )
 
 # Constantes globales
-VERSION = "1.07"
+VERSION = "1.09"
 CLOUD = "Dropbox"
 HOME = os.path.expanduser("~")
 PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
