@@ -1,10 +1,7 @@
-
 # -*- Coding: utf-8 -*-
-
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
-# Mdified on 01/05/2023.
-# Modified by Diablo76 on 01/05/2023 -- 10:31:02.
-
+# ClipboardToCloud est un script qui permet de récupérer le contenu
+# du presse-papier d'un ordinateur à un autre. 
 
 import os
 import sys
@@ -54,7 +51,6 @@ class ToolTip(QLabel):
 
 class ClipboardToCloudManager(QWidget):
     """ClipboardManager"""
-
     def __init__(self):
         super().__init__()
         self.directory_exist()
