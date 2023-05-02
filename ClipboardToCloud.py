@@ -3,6 +3,7 @@
 # ClipboardToCloud est un script qui permet de récupérer le contenu
 # du presse-papier d'un ordinateur à un autre.
 # Bruno Fiquet.
+
 import os
 import sys
 
