@@ -1,6 +1,5 @@
 # -*- Coding: utf-8 -*-
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
-# Modified on 01/05/2023.
 
 import os
 import sys
