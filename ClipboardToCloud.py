@@ -49,7 +49,6 @@ class ToolTip(QLabel):
 
 class ClipboardToCloudManager(QWidget):
     """ClipboardManager"""
-
     def __init__(self):
         super().__init__()
         self.directory_exist()
