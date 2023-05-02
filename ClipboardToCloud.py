@@ -2,7 +2,7 @@
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
 # ClipboardToCloud est un script qui permet de récupérer le contenu
 # du presse-papier d'un ordinateur à un autre.
-# Bruno Fiquet.
+# Bruno Fiquet le 02/05.
 
 import os
 import sys
