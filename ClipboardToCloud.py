@@ -178,7 +178,6 @@ class ClipboardToCloudManager(QWidget):
 
 
 if __name__ == "__main__":
-    print(QSystemTrayIcon.isSystemTrayAvailable())
     app = QApplication(sys.argv)
     manager = ClipboardToCloudManager()
     sys.exit(app.exec_())
