@@ -153,10 +153,6 @@ class ClipboardToCloudManager(QWidget):
         show_clipboard.triggered.connect(self.show_clipboard)
         menu.addAction(show_clipboard)
         menu.addSeparator()
-        about = QAction(parent=self, text="Informations")
-        about.triggered.connect(self.about)
-        menu.addAction(about)
-        menu.addSeparator()
         quit_app = QAction(parent=self, text="Quitter")
         quit_app.triggered.connect(app.quit)
         menu.addAction(quit_app)
@@ -182,9 +178,6 @@ class ClipboardToCloudManager(QWidget):
     def show_message(self, message: str, icon: QIcon, duration: int = 3000):
         """Affichage de la notification avec une durée de 3 secondes par défaut"""
         self.tray.showMessage(TITLE, message, icon, duration)
-
-    def about(self):
-        QMessageBox.about(self, TITLE, "Permet de transférer le contenu du presse-papier d'un ordinateur à un autre via le Cloud.")
 
 
 if __name__ == "__main__":
