@@ -59,9 +59,9 @@ class ClipboardToCloudManager(QWidget):
         self.tray = QSystemTrayIcon()
         self.tool_tip = ToolTip()
         self.icons = {
-            "Dropbox": QIcon(QPixmap("dropbox.png")),
-            "Clipboard": QIcon(QPixmap("clipboard.png")),
-            "Loupe": QIcon(QPixmap("loupe.png")),
+            "Dropbox": QIcon(QPixmap("Icons/dropbox.png")),
+            "Clipboard": QIcon(QPixmap("Icons/clipboard.png")),
+            "Loupe": QIcon(QPixmap("Icons/loupe.png")),
         }
         self.clipboard = app.clipboard()
         self.create_trayicon()
