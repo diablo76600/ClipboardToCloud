@@ -1,8 +1,7 @@
 # -*- Coding: utf-8 -*-
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
-# --------------------------------------------------------------------
 # ClipboardToCloud est un script qui permet de récupérer le contenu
-# du presse-papier via le Cloud (Dropbox) d'un ordinateur à un autre.
+# du presse-papier d'un ordinateur à un autre.
 
 import os
 import sys
@@ -30,7 +29,6 @@ TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip"""
-
     def __init__(self):
         super().__init__()
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
@@ -53,7 +51,6 @@ class ToolTip(QLabel):
 
 class ClipboardToCloudManager(QWidget):
     """ClipboardManager"""
-
     def __init__(self):
         super().__init__()
         self.directory_exist()
@@ -182,7 +179,6 @@ class ClipboardToCloudManager(QWidget):
 
 if __name__ == "__main__":
     print(QSystemTrayIcon.isSystemTrayAvailable())
-
     app = QApplication(sys.argv)
     manager = ClipboardToCloudManager()
     sys.exit(app.exec_())
