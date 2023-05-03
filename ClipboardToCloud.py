@@ -29,6 +29,7 @@ TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip"""
+
     def __init__(self):
         super().__init__()
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
@@ -51,6 +52,7 @@ class ToolTip(QLabel):
 
 class ClipboardToCloudManager(QWidget):
     """ClipboardManager"""
+
     def __init__(self):
         super().__init__()
         self.directory_exist()
@@ -178,7 +180,6 @@ class ClipboardToCloudManager(QWidget):
 
 
 if __name__ == "__main__":
-    print(QSystemTrayIcon.isSystemTrayAvailable())
     app = QApplication(sys.argv)
     manager = ClipboardToCloudManager()
     sys.exit(app.exec_())
