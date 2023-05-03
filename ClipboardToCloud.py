@@ -59,9 +59,9 @@ class ClipboardToCloudManager(QWidget):
         self.tray = QSystemTrayIcon()
         self.tool_tip = ToolTip()
         self.icons = {
-            "Dropbox": QIcon(QPixmap("Icons/dropbox.png")),
-            "Clipboard": QIcon(QPixmap("Icons/clipboard.png")),
-            "Loupe": QIcon(QPixmap("Icons/loupe.png")),
+            "Dropbox": QIcon(QPixmap(self.resource_path("Icons/dropbox.png"))),
+            "Clipboard": QIcon(QPixmap(self.resource_path("Icons/clipboard.png"))),
+            "Loupe": QIcon(QPixmap(self.resource_path("Icons/loupe.png"))),
         }
         self.clipboard = app.clipboard()
         self.create_trayicon()
@@ -177,6 +177,12 @@ class ClipboardToCloudManager(QWidget):
     def show_message(self, message: str, icon: QIcon, duration: int = 3000):
         """Affichage de la notification avec une durée de 3 secondes par défaut"""
         self.tray.showMessage(TITLE, message, icon, duration)
+
+    def resource_path(self, relative_path: str) -> str:
+        """Utilisation du chemin absolu pour PyInstaller option -ONEFILE)"""
+        if hasattr(sys, "_MEIPASS"):
+            return os.path.join(sys._MEIPASS, relative_path) # type: ignore
+        return os.path.join(os.path.abspath("."), relative_path)
 
 
 if __name__ == "__main__":
