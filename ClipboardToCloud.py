@@ -184,7 +184,11 @@ class ClipboardToCloudManager(QWidget):
         self.tray.showMessage(TITLE, message, icon, duration)
 
     def about(self):
-        QMessageBox.about(self, TITLE, "Permet de transférer le contenu du presse-papier d'un ordinateur à un autre via le Cloud.")
+        QMessageBox.about(
+            self,
+            TITLE,
+            "Permet de transférer le contenu du presse-papier d'un ordinateur à un autre via le Cloud.",
+        )
 
 
 if __name__ == "__main__":
