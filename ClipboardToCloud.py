@@ -162,7 +162,7 @@ class ClipboardToCloudManager(QWidget):
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap().scaledToWidth(
-                    500, Qt.SmoothTransformation  # type: ignore
+                    500, Qt.SmoothTransformation | Qt.KeepAspectRatio  # type: ignore
                 )
                 self.tool_tip.setPixmap(pixmap)
             else:
@@ -181,7 +181,7 @@ class ClipboardToCloudManager(QWidget):
     def resource_path(self, relative_path: str) -> str:
         """Utilisation du chemin absolu pour PyInstaller option -ONEFILE)"""
         if hasattr(sys, "_MEIPASS"):
-            return os.path.join(sys._MEIPASS, relative_path) # type: ignore
+            return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
         return os.path.join(os.path.abspath("."), relative_path)
 
 
