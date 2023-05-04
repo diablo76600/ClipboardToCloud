@@ -34,7 +34,7 @@ class ToolTip(QLabel):
         super().__init__()
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
         self.setStyleSheet(
-            "border: 1px solid black; background-color: rgb(200,200,180)"
+            "border: 1px solid black; background-color: rgb(208, 208, 160)"
         )
         self.setWindowOpacity(0.8)
         self.center = app.screens()[0].availableGeometry().center()
