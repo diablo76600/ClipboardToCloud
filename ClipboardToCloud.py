@@ -171,7 +171,7 @@ class ClipboardToCloudManager(QWidget):
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap().scaledToWidth(
-                    250, Qt.SmoothTransformation | Qt.KeepAspectRatio  # type: ignore
+                    350, Qt.SmoothTransformation | Qt.KeepAspectRatio  # type: ignore
                 )
                 self.tool_tip.setPixmap(pixmap)
             else:
