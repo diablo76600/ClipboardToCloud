@@ -5,9 +5,10 @@
 
 import os
 import sys
+from platform import system
 
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QIcon, QImage, QPixmap
+from PyQt5.QtGui import QIcon, QImage, QPixmap, QCursor
 from PyQt5.QtWidgets import (
     QAction,
     QApplication,
@@ -133,6 +134,8 @@ class ClipboardToCloudManager(QWidget):
         self.tray.setIcon(self.icons["Clipboard"])
         self.tray.setVisible(True)
         self.tray.setToolTip(TITLE)
+        if system() == "Windows":
+            self.tray.activated.connect(self.tray_reason)
         menu = QMenu(self)
         opt_copy = QAction(
             parent=self, text=f"Copier dans {CLOUD}", icon=self.icons["Dropbox"]
@@ -156,6 +159,13 @@ class ClipboardToCloudManager(QWidget):
         quit_app.triggered.connect(app.quit)
         menu.addAction(quit_app)
         self.tray.setContextMenu(menu)
+
+    def tray_reason(self, reason: int):
+        """Affichage du menu (Windows)"""
+
+        if reason == self.tray.Trigger:
+            self.tray.contextMenu().popup(QCursor.pos())
+
 
     def show_clipboard(self):
         """Affichage du presse-papier"""
