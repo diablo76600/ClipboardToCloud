@@ -162,7 +162,6 @@ class ClipboardToCloudManager(QWidget):
 
     def tray_reason(self, reason: int):
         """Affichage du menu (Windows)"""
-
         if reason == self.tray.Trigger: # type: ignore
             self.tray.contextMenu().popup(QCursor.pos())
 
