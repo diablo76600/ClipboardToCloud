@@ -6,7 +6,6 @@
 import os
 import sys
 from platform import system
-
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QImage, QPixmap, QCursor
 from PyQt5.QtWidgets import (
