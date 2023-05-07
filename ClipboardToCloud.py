@@ -17,7 +17,6 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QSystemTrayIcon,
 )
-
 # Constantes globales
 VERSION = "1.09"
 CLOUD = "Dropbox"
