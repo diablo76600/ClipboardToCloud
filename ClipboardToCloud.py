@@ -5,7 +5,6 @@
 
 import os
 import sys
-from platform import system
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QImage, QPixmap, QCursor
 from PyQt5.QtWidgets import (
@@ -133,7 +132,7 @@ class ClipboardToCloudManager(QWidget):
         self.tray.setIcon(self.icons["Clipboard"])
         self.tray.setVisible(True)
         self.tray.setToolTip(TITLE)
-        if system() == "Windows":
+        if sys.platform == "win32":
             self.tray.activated.connect(self.tray_reason)
         menu = QMenu(self)
         opt_copy = QAction(
