@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QSystemTrayIcon,
 )
+
 # Constantes globales
 VERSION = "1.09"
 CLOUD = "Dropbox"
@@ -158,10 +159,9 @@ class ClipboardToCloudManager(QWidget):
         self.tray.setContextMenu(menu)
 
     def tray_reason(self, reason: int):
-        """Affichage du menu (Windows)"""
-        if reason == self.tray.Trigger: # type: ignore
+        """Affichage du menu (Windows) avec le click gauche"""
+        if reason == self.tray.Trigger:  # type: ignore
             self.tray.contextMenu().popup(QCursor.pos())
-
 
     def show_clipboard(self):
         """Affichage du presse-papier"""
