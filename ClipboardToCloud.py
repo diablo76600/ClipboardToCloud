@@ -67,7 +67,7 @@ class ClipboardToCloudManager(QWidget):
         }
         self.clipboard = app.clipboard()
         self.create_trayicon()
-        self.old_data = os.stat(PATH_FILE).st_mtime #os.path.getsize(PATH_FILE)
+        self.old_data = os.stat(PATH_FILE).st_mtime
         self.new_data = None
         self.timer = QTimer()
         self.timer.setInterval(1000)
@@ -88,9 +88,8 @@ class ClipboardToCloudManager(QWidget):
                 sys.exit()
 
     def data_changed(self):
-        """Contrôle de l'état du fichier"""
-
-        self.new_data = os.stat(PATH_FILE).st_mtime #os.path.getsize(PATH_FILE)
+        """Contrôle du fichier"""
+        self.new_data = os.stat(PATH_FILE).st_mtime
         if self.new_data != self.old_data:
             self.paste_to_clipboard()
             self.old_data = self.new_data
@@ -107,7 +106,7 @@ class ClipboardToCloudManager(QWidget):
                 with open(PATH_FILE, "wb") as file:
                     file.write(text.encode("utf-8"))
                 self.show_message(f"Texte copié dans {CLOUD}.", self.icons["Dropbox"])
-            self.old_data = os.stat(PATH_FILE).st_mtime #os.path.getsize(PATH_FILE)
+            self.old_data = os.stat(PATH_FILE).st_mtime
         else:
             self.show_message(
                 "Le Presse-papier est vide !!!.",
