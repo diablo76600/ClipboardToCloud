@@ -1,13 +1,15 @@
 # -*- Coding: utf-8 -*-
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
-# ClipboardToCloud est un script qui permet de récupérer le contenu
-# du presse-papier d'un ordinateur à un autre.
+""" ClipboardToCloud est un script qui permet de récupérer le contenu
+    du presse-papier d'un ordinateur à un autre
+    sans tenir compte de l'OS et du réseau.
+    Par défaut, il fonctionne avec Dropbox mais il peut être adapté
+    pour d'autre Cloud (Google Drive etc...) """
 
 import os
 import sys
-
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QIcon, QImage, QPixmap
+from PyQt5.QtGui import QIcon, QImage, QPixmap, QCursor
 from PyQt5.QtWidgets import (
     QAction,
     QApplication,
@@ -29,11 +31,12 @@ TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip"""
+
     def __init__(self):
         super().__init__()
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
         self.setStyleSheet(
-            "border: 1px solid black; background-color: rgb(200,200,180)"
+            "border: 1px solid black; background-color: rgb(208, 208, 160)"
         )
         self.setWindowOpacity(0.8)
         self.center = app.screens()[0].availableGeometry().center()
@@ -51,19 +54,20 @@ class ToolTip(QLabel):
 
 class ClipboardToCloudManager(QWidget):
     """ClipboardManager"""
+
     def __init__(self):
         super().__init__()
         self.directory_exist()
         self.tray = QSystemTrayIcon()
         self.tool_tip = ToolTip()
         self.icons = {
-            "Dropbox": QIcon(QPixmap("dropbox.png")),
-            "Clipboard": QIcon(QPixmap("clipboard.png")),
-            "Loupe": QIcon(QPixmap("loupe.png")),
+            "Dropbox": QIcon(QPixmap(self.resource_path("Icons/dropbox.png"))),
+            "Clipboard": QIcon(QPixmap(self.resource_path("Icons/clipboard.png"))),
+            "Loupe": QIcon(QPixmap(self.resource_path("Icons/loupe.png"))),
         }
         self.clipboard = app.clipboard()
         self.create_trayicon()
-        self.old_data = os.path.getsize(PATH_FILE)
+        self.old_data = os.stat(PATH_FILE).st_mtime
         self.new_data = None
         self.timer = QTimer()
         self.timer.setInterval(1000)
@@ -84,8 +88,8 @@ class ClipboardToCloudManager(QWidget):
                 sys.exit()
 
     def data_changed(self):
-        """Contrôle de l'état du fichier"""
-        self.new_data = os.path.getsize(PATH_FILE)
+        """Contrôle du fichier"""
+        self.new_data = os.stat(PATH_FILE).st_mtime
         if self.new_data != self.old_data:
             self.paste_to_clipboard()
             self.old_data = self.new_data
@@ -102,7 +106,7 @@ class ClipboardToCloudManager(QWidget):
                 with open(PATH_FILE, "wb") as file:
                     file.write(text.encode("utf-8"))
                 self.show_message(f"Texte copié dans {CLOUD}.", self.icons["Dropbox"])
-            self.old_data = os.path.getsize(PATH_FILE)
+            self.old_data = os.stat(PATH_FILE).st_mtime
         else:
             self.show_message(
                 "Le Presse-papier est vide !!!.",
@@ -131,6 +135,8 @@ class ClipboardToCloudManager(QWidget):
         self.tray.setIcon(self.icons["Clipboard"])
         self.tray.setVisible(True)
         self.tray.setToolTip(TITLE)
+        if sys.platform == "win32":
+            self.tray.activated.connect(self.tray_reason)
         menu = QMenu(self)
         opt_copy = QAction(
             parent=self, text=f"Copier dans {CLOUD}", icon=self.icons["Dropbox"]
@@ -155,12 +161,17 @@ class ClipboardToCloudManager(QWidget):
         menu.addAction(quit_app)
         self.tray.setContextMenu(menu)
 
+    def tray_reason(self, reason: int):
+        """Affichage du menu (Windows) avec le click gauche"""
+        if reason == self.tray.Trigger:  # type: ignore
+            self.tray.contextMenu().popup(QCursor.pos())
+
     def show_clipboard(self):
         """Affichage du presse-papier"""
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap().scaledToWidth(
-                    500, Qt.SmoothTransformation  # type: ignore
+                    350, Qt.SmoothTransformation | Qt.KeepAspectRatio  # type: ignore
                 )
                 self.tool_tip.setPixmap(pixmap)
             else:
@@ -175,6 +186,13 @@ class ClipboardToCloudManager(QWidget):
     def show_message(self, message: str, icon: QIcon, duration: int = 3000):
         """Affichage de la notification avec une durée de 3 secondes par défaut"""
         self.tray.showMessage(TITLE, message, icon, duration)
+
+    @staticmethod
+    def resource_path(relative_path: str) -> str:
+        """Utilisation du chemin absolu pour PyInstaller option -ONEFILE)"""
+        if hasattr(sys, "_MEIPASS"):
+            return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
+        return os.path.join(os.path.abspath("."), relative_path)
 
 
 if __name__ == "__main__":
