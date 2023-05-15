@@ -1,5 +1,5 @@
 # ClipboardToCloud
-Transfert de fichiers via le Cloud (Dropbox) et presse-papier.
-Permet de transférer le contenu du presse-papier d'un ordinateur à un autre via le Cloud( par défaut Dropbox), indépendamment de l'OS et du réseau utilisé.
+ClipboardToCloud est un script qui permet de récupérer le contenudu presse-papier d'un ordinateur à un autre sans tenir compte de l'OS et du réseau.
+Par défaut, il fonctionne avec Dropbox mais il peut être adapté pour d'autre Cloud (Google Drive etc...)
 Version 1.09.
 
