@@ -1,10 +1,10 @@
 # -*- Coding: utf-8 -*-
 # Created by Diablo76 on 14/02/2023 -- 07:41:27.
-# ClipboardToCloud est un script qui permet de récupérer le contenu
-# du presse-papier d'un ordinateur à un autre
-# sans tenir compte de l'OS et du réseau.
-# Par défaut, il fonctionne avec Dropbox mais il peut être adapté
-# pour d'autre Cloud (Google Drive etc...)
+""" ClipboardToCloud est un script qui permet de récupérer le contenu
+    du presse-papier d'un ordinateur à un autre
+    sans tenir compte de l'OS et du réseau.
+    Par défaut, il fonctionne avec Dropbox mais il peut être adapté
+    pour d'autre Cloud (Google Drive etc...) """
 
 import os
 import sys
@@ -89,7 +89,8 @@ class ClipboardToCloudManager(QWidget):
 
     def data_changed(self):
         """Contrôle de l'état du fichier"""
-        self.new_data = os.stat(PATH_FILE).st_mtime
+
+        self.new_data = os.stat(PATH_FILE).st_mtime #os.path.getsize(PATH_FILE)
         if self.new_data != self.old_data:
             self.paste_to_clipboard()
             self.old_data = self.new_data
@@ -187,7 +188,8 @@ class ClipboardToCloudManager(QWidget):
         """Affichage de la notification avec une durée de 3 secondes par défaut"""
         self.tray.showMessage(TITLE, message, icon, duration)
 
-    def resource_path(self, relative_path: str) -> str:
+    @staticmethod
+    def resource_path(relative_path: str) -> str:
         """Utilisation du chemin absolu pour PyInstaller option -ONEFILE)"""
         if hasattr(sys, "_MEIPASS"):
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
