@@ -89,7 +89,6 @@ class ClipboardToCloudManager(QWidget):
 
     def data_changed(self):
         """Contrôle de l'état du fichier"""
-
         self.new_data = os.stat(PATH_FILE).st_mtime #os.path.getsize(PATH_FILE)
         if self.new_data != self.old_data:
             self.paste_to_clipboard()
