@@ -192,7 +192,7 @@ class ClipboardToCloudManager(QWidget):
         """Utilisation du chemin absolu pour PyInstaller option -ONEFILE)"""
         if hasattr(sys, "_MEIPASS"):
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
-        return os.path.join(os.path.abspath("."), relative_path)
+        return relative_path
 
 
 if __name__ == "__main__":
