@@ -162,7 +162,7 @@ class ClipboardToCloudManager(QWidget):
         self.tray.setContextMenu(menu)
 
     def tray_reason(self, reason: int):
-        """Affichage du menu (Windows) avec le click gauche"""
+        """Affichage du menu (Windows) avec le clic gauche"""
         if reason == self.tray.Trigger:  # type: ignore
             self.tray.contextMenu().popup(QCursor.pos())
 
