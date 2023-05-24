@@ -112,12 +112,14 @@ class ClipboardToCloudManager(QWidget):
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap()
                 pixmap.save(PATH_FILE, "PNG")
-                self.show_message(f"Image copiée dans {CLOUD}.", QIcon(pixmap))
+                self.show_message(f"Image transférée sur {CLOUD}.", QIcon(pixmap))
             elif self.clipboard.mimeData().hasText():
                 text = self.clipboard.text()
                 with open(PATH_FILE, "wb") as file:
                     file.write(text.encode("utf-8"))
-                self.show_message(f"Texte copié dans {CLOUD}.", self.icons["Dropbox"])
+                self.show_message(
+                    f"Texte transféré sur {CLOUD}.", self.icons["Dropbox"]
+                )
             self.old_data = os.stat(PATH_FILE).st_mtime
         else:
             self.show_message(
@@ -151,7 +153,7 @@ class ClipboardToCloudManager(QWidget):
             self.tray.activated.connect(self.tray_reason)
         menu = QMenu(self)
         opt_copy = QAction(
-            parent=self, text=f"Copier dans {CLOUD}", icon=self.icons["Dropbox"]
+            parent=self, text=f"Transféré sur {CLOUD}", icon=self.icons["Dropbox"]
         )
         opt_copy.triggered.connect(self.copy_to_cloud)
         menu.addAction(opt_copy)
