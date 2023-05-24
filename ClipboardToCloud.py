@@ -61,9 +61,21 @@ class ClipboardToCloudManager(QWidget):
         self.tray = QSystemTrayIcon()
         self.tool_tip = ToolTip()
         self.icons = {
-            "Dropbox": QIcon(QPixmap(self.resource_path("Icons/dropbox.png"))),
-            "Clipboard": QIcon(QPixmap(self.resource_path("Icons/clipboard.png"))),
-            "Loupe": QIcon(QPixmap(self.resource_path("Icons/loupe.png"))),
+            "Dropbox": QIcon(
+                QPixmap(self.resource_path("Icons/dropbox.png")).scaledToWidth(
+                    32, Qt.SmoothTransformation  # type: ignore
+                )
+            ),
+            "Clipboard": QIcon(
+                QPixmap(self.resource_path("Icons/clipboard.png")).scaledToWidth(
+                    32, Qt.SmoothTransformation  # type: ignore
+                )
+            ),
+            "Loupe": QIcon(
+                QPixmap(self.resource_path("Icons/loupe.png")).scaledToWidth(
+                    32, Qt.SmoothTransformation  # type: ignore
+                )
+            ),
         }
         self.clipboard = app.clipboard()
         self.create_trayicon()
@@ -192,7 +204,7 @@ class ClipboardToCloudManager(QWidget):
         """Utilisation du chemin absolu pour PyInstaller option -ONEFILE)"""
         if hasattr(sys, "_MEIPASS"):
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
-        return os.path.join(os.path.abspath("."), relative_path)
+        return relative_path
 
 
 if __name__ == "__main__":
