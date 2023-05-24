@@ -100,7 +100,7 @@ class ClipboardToCloudManager(QWidget):
                 sys.exit()
 
     def data_changed(self):
-        """Contrôle du fichier"""
+        """Contrôle du fichier binaire"""
         self.new_data = os.stat(PATH_FILE).st_mtime
         if self.new_data != self.old_data:
             self.paste_to_clipboard()
