@@ -36,7 +36,7 @@ class ToolTip(QLabel):
         super().__init__()
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
         self.setStyleSheet(
-            "border: 1px solid black; background-color: rgb(238, 238, 240)"
+            "border: 1px solid black; background-color: rgb(255,239,213)"
         )
         self.setWindowOpacity(0.8)
         self.center = app.screens()[0].availableGeometry().center()
@@ -53,7 +53,7 @@ class ToolTip(QLabel):
 
 
 class ClipboardToCloudManager(QWidget):
-    """ClipboardManager"""
+    """ClipboardToCloudManager"""
 
     def __init__(self):
         super().__init__()
