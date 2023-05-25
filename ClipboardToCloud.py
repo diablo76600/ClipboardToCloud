@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import (
 )
 
 # Constantes globales
-VERSION = "1.09"
+VERSION = "1.9.01"
 CLOUD = "Dropbox"
 HOME = os.path.expanduser("~")
 PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
