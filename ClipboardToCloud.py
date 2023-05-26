@@ -32,7 +32,7 @@ TITLE = f"Clipboard To {CLOUD} {VERSION}"
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip"""
 
-    def __init__(self):
+    def __init__(self, app):
         super().__init__()
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
         self.setStyleSheet(
@@ -55,11 +55,12 @@ class ToolTip(QLabel):
 class ClipboardToCloudManager(QWidget):
     """ClipboardToCloudManager"""
 
-    def __init__(self):
+    def __init__(self, app=None):
         super().__init__()
         self.directory_exist()
         self.tray = QSystemTrayIcon()
-        self.tool_tip = ToolTip()
+        self.app = app or QApplication(sys.argv)
+        self.tool_tip = ToolTip(self.app)
         self.icons = {
             "Dropbox": QIcon(
                 QPixmap(self.resource_path("Icons/dropbox.png")).scaledToWidth(
@@ -77,7 +78,7 @@ class ClipboardToCloudManager(QWidget):
                 )
             ),
         }
-        self.clipboard = app.clipboard()
+        self.clipboard = self.app.clipboard()
         self.create_trayicon()
         self.old_data = os.stat(PATH_FILE).st_mtime
         self.new_data = None
@@ -171,7 +172,7 @@ class ClipboardToCloudManager(QWidget):
         menu.addAction(show_clipboard)
         menu.addSeparator()
         quit_app = QAction(parent=self, text="Quitter")
-        quit_app.triggered.connect(app.quit)
+        quit_app.triggered.connect(self.app.quit)
         menu.addAction(quit_app)
         self.tray.setContextMenu(menu)
 
@@ -210,6 +211,5 @@ class ClipboardToCloudManager(QWidget):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
     manager = ClipboardToCloudManager()
-    sys.exit(app.exec_())
+    sys.exit(manager.app.exec_())
