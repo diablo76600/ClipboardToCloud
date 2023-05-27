@@ -41,10 +41,11 @@ class ServiceDirectoryAndFile:
         self.old_data = None
         self.new_data = None
 
-    def data_changed(self) -> float:  # type: ignore
+    def data_changed(self):  # type: ignore
         """Contrôle du fichier binaire"""
         new_data: float = os.stat(self.path_file).st_mtime
         if new_data != self.old_data:
+            manager.paste_to_clipboard()
             self.old_data = new_data
 
     def directory_exist_and_create_file_with_title(self) -> None:
