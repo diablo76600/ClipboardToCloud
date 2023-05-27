@@ -71,6 +71,7 @@ class ServiceDirectoryAndFile:
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip"""
 
+
     def __init__(self, app) -> None:
 
         super().__init__()
@@ -261,6 +262,7 @@ class ClipboardToCloudManager:
         show_clipboard.triggered.connect(self.show_clipboard)
         menu.addAction(show_clipboard)
         menu.addSeparator()
+
         quit_app = QAction(parent=self.widget, text="Quitter")
         quit_app.triggered.connect(self.app.quit)
         menu.addAction(quit_app)
