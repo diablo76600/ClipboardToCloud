@@ -39,9 +39,9 @@ class ServiceDirectoryAndFile:
         self.path_file: str = path_file or PATH_FILE
         self.title: str = title or TITLE
         self.old_data = None
-        self.new_data = None
+        #self.new_data = None
 
-    def data_changed(self):  # type: ignore
+    def data_changed(self):
         """Contrôle du fichier binaire"""
         new_data: float = os.stat(self.path_file).st_mtime
         if new_data != self.old_data:
@@ -171,7 +171,7 @@ class ClipboardToCloudManager:
         self.create_trayicon()
         self.timer = QTimer()
         self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.service_directory_file.data_changed)  # type: ignore
+        self.timer.timeout.connect(self.service_directory_file.data_changed)
         self.timer.start()
 
     def _set_icons(self):
