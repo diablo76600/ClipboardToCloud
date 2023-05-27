@@ -38,8 +38,7 @@ class ServiceDirectoryAndFile:
         self.path_cloud: str = path_cloud or PATH_CLOUD
         self.path_file: str = path_file or PATH_FILE
         self.title: str = title or TITLE
-        self.old_data = None
-        #self.new_data = None
+        self.old_data = os.stat(self.path_file).st_mtime
 
     def data_changed(self):
         """Contrôle du fichier binaire"""
