@@ -20,8 +20,10 @@ from PyQt5.QtWidgets import (
 )
 
 # Constantes globales
-VERSION = "1.9.01"
+VERSION = "1.9.04"
 CLOUD = "Dropbox"
+# Pour utiliser Google Drive :
+# CLOUD = "Mon Drive"
 HOME = os.path.expanduser("~")
 PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
 PATH_FILE = PATH_CLOUD + "clipboard.data"
@@ -29,19 +31,33 @@ TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 
 class DirectoryError(Exception):
+    """Levée d'exception lorsque la création du répertoire sur le cloud échoue."""
+
     def __init__(self, message):
+        """Contructeur
+        Args:
+            message (str): Affiche le message d'erreur associé à l'exception.
+        """
         self.message = message
 
 
 class ServiceDirectoryAndFile:
+    """Gestionnaire du répertoire sur le cloud et le fichier binaire."""
+
     def __init__(self, path_cloud=None, path_file=None, title=None):
+        """Constructeur
+        Args:
+            path_cloud (str, optional): Chemin du répertoire sur le cloud. Defaults to None.
+            path_file (str, optional): Chemin du fichier binaire sur le cloud. Defaults to None.
+            title (str, optional): Titre de l'application. Defaults to None.
+        """
         self.path_cloud: str = path_cloud or PATH_CLOUD
         self.path_file: str = path_file or PATH_FILE
         self.title: str = title or TITLE
-        self.old_data = os.stat(self.path_file).st_mtime
+        self.old_data: float = os.stat(self.path_file).st_mtime
 
     def data_changed(self):
-        """Contrôle du fichier binaire"""
+        """Contrôle si le fichier binaire a été modifié depuis la dernière vérification."""
         new_data: float = os.stat(self.path_file).st_mtime
         if new_data != self.old_data:
             manager.paste_to_clipboard()
@@ -91,30 +107,37 @@ class ToolTip(QLabel):
 
 
 class Clipboard:
+    """Gestionnaire des opérations de copier/coller du presse-papier."""
+
     def __init__(self, app, path_file=None, cloud=None):
-        super().__init__()
+        """Contructeur
+        Args:
+            app (object): Instance de l'application.
+            path_file (str, optional): Chemin du fichier binaire. Defaults to None.
+            cloud (str, optional): Nom du service cloud. Defaults to None.
+        """
         self.app = app
-        self.obj = app.clipboard()
+        self.clipboard = app.clipboard()
         self.path_file = path_file or PATH_FILE
         self.cloud = cloud or CLOUD
 
     def copy_to_cloud(self) -> None:
-        if self.obj.mimeData().formats():
-            if self.obj.mimeData().hasImage():
-                pixmap = self.obj.pixmap()
+        """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
+        if self.clipboard.mimeData().formats():
+            if self.clipboard.mimeData().hasImage():
+                pixmap = self.clipboard.pixmap()
                 pixmap.save(self.path_file, "PNG")
                 manager.show_message(
                     f"Image transférée sur {self.cloud}.", QIcon(pixmap)
                 )
-            elif self.obj.mimeData().hasText():
-                text = self.obj.text()
+            elif self.clipboard.mimeData().hasText():
+                text = self.clipboard.text()
                 with open(self.path_file, "wb") as file:
                     file.write(text.encode("utf-8"))
                 manager.show_message(
-                    f"Texte transféré sur {self.cloud}.", manager._icons["Dropbox"]
+                    f"Texte transféré sur {self.cloud}.", manager._icons["Clipboard"]
                 )
-
-            self.old_data = os.stat(self.path_file).st_mtime
+            manager.service_directory_file.old_data = os.stat(self.path_file).st_mtime
         else:
             manager.show_message(
                 "Le Presse-papier est vide !!!.",
@@ -122,31 +145,32 @@ class Clipboard:
             )
 
     def paste_to_clipboard(self) -> None:
+        """Colle le contenu du fichier binaire du cloud vers le presse-papier."""
         with open(self.path_file, "rb") as file:
             data = file.read()
         header = data[0:4]
         if header == b"\x89PNG":
             image = QImage.fromData(data)
-            self.obj.setImage(image)
+            self.clipboard.setImage(image)
             manager.show_message(
                 "Image collée dans le Presse-papier.", QIcon(QPixmap(image))
             )
         else:
-            self.obj.setText(data.decode("utf-8"))
+            self.clipboard.setText(data.decode("utf-8"))
             manager.show_message(
                 "Texte collé dans le Presse-papier.", manager._icons["Clipboard"]
             )
 
     def show_clipboard(self) -> None:
-        """Affichage du presse-papier"""
-        if self.obj.mimeData().formats():
-            if self.obj.mimeData().hasImage():
-                pixmap = self.obj.pixmap().scaledToWidth(
+        """Affiche le contenu actuel du presse-papier"""
+        if self.clipboard.mimeData().formats():
+            if self.clipboard.mimeData().hasImage():
+                pixmap = self.clipboard.pixmap().scaledToWidth(
                     350, Qt.SmoothTransformation | Qt.KeepAspectRatio  # type: ignore
                 )
                 manager.tool_tip.setPixmap(pixmap)
             else:
-                manager.tool_tip.setText(self.obj.text())
+                manager.tool_tip.setText(self.clipboard.text())
             manager.tool_tip.show()
         else:
             self.app.show_message(
@@ -156,9 +180,13 @@ class Clipboard:
 
 
 class ClipboardToCloudManager:
-    """ClipboardToCloudManager"""
+    """Gestionnaire de l'application et des interactions avec l'utilisateur."""
 
     def __init__(self, app=None):
+        """Constructeur
+        Args:
+            app (object, optional): Instance de l'application. Defaults to None.
+        """
         self.app = app or QApplication(sys.argv)
         self.widget = QWidget()
         self.service_directory_file = ServiceDirectoryAndFile()
@@ -174,24 +202,25 @@ class ClipboardToCloudManager:
         self.timer.start()
 
     def _set_icons(self):
+        """Initialise et retourne un dictionnaire d'icônes utilisées dans l'application."""
         return {
-            "Dropbox": QIcon(
+            CLOUD: QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/dropbox.png")
+                    ServiceDirectoryAndFile.resource_path(f"Icons/{CLOUD}.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Clipboard": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/clipboard.png")
+                    ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Loupe": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/loupe.png")
+                    ServiceDirectoryAndFile.resource_path("Icons/Loupe.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
@@ -199,9 +228,11 @@ class ClipboardToCloudManager:
         }
 
     def _exec(self):
+        """Méthode interne qui exécute les étapes d'initialisation."""
         self.directory_exist_and_create_file_with_title()
 
     def directory_exist_and_create_file_with_title(self) -> None:
+        """Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
         try:
             self.service_directory_file.directory_exist_and_create_file_with_title()
         except DirectoryError as err:
@@ -211,15 +242,15 @@ class ClipboardToCloudManager:
             sys.exit()
 
     def copy_to_cloud(self) -> None:
-        """Copie du fichier binaire sur le Cloud"""
+        """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
         self.clipboard.copy_to_cloud()
 
     def paste_to_clipboard(self) -> None:
-        """Copie du fichier binaire du cloud vers le presse-papier"""
+        """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
         self.clipboard.paste_to_clipboard()
 
     def create_trayicon(self):
-        """Création du QSystemTrayIcon"""
+        """Création et configuration de l'icône de la barre d'état système (system tray icon)"""
         self.tray.setIcon(self._icons["Clipboard"])
         self.tray.setVisible(True)
         self.tray.setToolTip(TITLE)
@@ -229,7 +260,7 @@ class ClipboardToCloudManager:
         opt_copy = QAction(
             parent=self.widget,
             text=f"Transféré sur {CLOUD}",
-            icon=self._icons["Dropbox"],
+            icon=self._icons[CLOUD],
         )
         opt_copy.triggered.connect(self.copy_to_cloud)
         menu.addAction(opt_copy)
@@ -248,7 +279,6 @@ class ClipboardToCloudManager:
         show_clipboard.triggered.connect(self.show_clipboard)
         menu.addAction(show_clipboard)
         menu.addSeparator()
-
         quit_app = QAction(parent=self.widget, text="Quitter")
         quit_app.triggered.connect(self.app.quit)
         menu.addAction(quit_app)
@@ -268,6 +298,7 @@ class ClipboardToCloudManager:
         self.tray.showMessage(TITLE, message, icon, duration)
 
     def mainloop(self):
+        """Appel la méthode exec_() de l'objet app"""
         sys.exit(manager.app.exec_())
 
 
