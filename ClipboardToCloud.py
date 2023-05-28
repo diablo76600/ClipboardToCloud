@@ -5,6 +5,7 @@
     sans tenir compte de l'OS et du réseau.
     Par défaut, il fonctionne avec Dropbox mais il peut être adapté
     pour d'autre Cloud (Google Drive etc...) """
+
 import os
 import sys
 from typing import Union
@@ -192,62 +193,88 @@ class Clipboard:
         self.path_file = path_file or PATH_FILE
         self.cloud = cloud or CLOUD
 
-    def copy_to_cloud(self) -> None:
+        self._tool_tip = ToolTip(app=app)
+
+        self._icons = self._set_icons()
+
+    def _set_icons(self):
+        """Initialise et retourne un dictionnaire d'icônes utilisées dans l'application."""
+        return {
+            self.cloud: QIcon(
+                QPixmap(
+                    ServiceDirectoryAndFile.resource_path(f"Icons/{self.cloud}.png")
+                ).scaledToWidth(
+                    32, Qt.SmoothTransformation  # type: ignore
+                )
+            ),
+            "Clipboard": QIcon(
+                QPixmap(
+                    ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png")
+                ).scaledToWidth(
+                    32, Qt.SmoothTransformation  # type: ignore
+                )
+            ),
+            "Loupe": QIcon(
+                QPixmap(
+                    ServiceDirectoryAndFile.resource_path("Icons/Loupe.png")
+                ).scaledToWidth(
+                    32, Qt.SmoothTransformation  # type: ignore
+                )
+            ),
+        }
+
+    def copy_to_cloud(self, service: ServiceDirectoryAndFile) -> None:
         """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
+        message = "Le Presse-papier est vide !!!."
+        type_message = QSystemTrayIcon.Warning
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap()
                 pixmap.save(self.path_file, "PNG")
-                manager.show_message(
-                    f"Image transférée sur {self.cloud}.", QIcon(pixmap)
-                )
+                message = f"Image transférée sur {self.cloud}"
+                type_message = QIcon(pixmap)
             elif self.clipboard.mimeData().hasText():
                 text = self.clipboard.text()
                 with open(self.path_file, "wb") as file:
                     file.write(text.encode("utf-8"))
-                manager.show_message(
-                    f"Texte transféré sur {self.cloud}.", manager._icons["Clipboard"]
-                )
-            manager.service_directory_file.old_data = os.stat(self.path_file).st_mtime
-        else:
-            manager.show_message(
-                "Le Presse-papier est vide !!!.",
-                QSystemTrayIcon.Warning,  # type: ignore
-            )
+                message = f"Texte transféré sur {self.cloud}"
+                type_message = self._icons["Clipboard"]
+            service.old_data = os.stat(self.path_file).st_mtime
+        return message, type_message
 
-    def paste_to_clipboard(self) -> None:
+    def paste_to_clipboard(self) -> tuple:
         """Colle le contenu du fichier binaire du cloud vers le presse-papier."""
         with open(self.path_file, "rb") as file:
             data = file.read()
         header = data[0:4]
+        message = "Texte collé dans le Presse-papier."
+        type_message = self._icons["Clipboard"]
         if header == b"\x89PNG":
             image = QImage.fromData(data)
             self.clipboard.setImage(image)
-            manager.show_message(
-                "Image collée dans le Presse-papier.", QIcon(QPixmap(image))
-            )
+            message = "Image collée dans le Presse-papier."
+            type_message = QIcon(QPixmap(image))
         else:
             self.clipboard.setText(data.decode("utf-8"))
-            manager.show_message(
-                "Texte collé dans le Presse-papier.", manager._icons["Clipboard"]
-            )
+        return message, type_message
+            
 
     def show_clipboard(self) -> None:
         """Affiche le contenu actuel du presse-papier."""
+        message = "Le Presse-papier est vide !!!."
+        type_message = QSystemTrayIcon.Warning
         if self.clipboard.mimeData().formats():
+            message = None
+            type_message = None
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap().scaledToWidth(
                     350, Qt.SmoothTransformation | Qt.KeepAspectRatio  # type: ignore
                 )
-                manager.tool_tip.setPixmap(pixmap)
+                self._tool_tip.setPixmap(pixmap)
             else:
-                manager.tool_tip.setText(self.clipboard.text())
-            manager.tool_tip.show()
-        else:
-            self.app.show_message(
-                "Le Presse-papier est vide !!!.",
-                QSystemTrayIcon.Warning,  # type: ignore
-            )
+                self._tool_tip.setText(self.clipboard.text())
+            self._tool_tip.show()
+        return message, type_message
 
 
 class Timer:
@@ -279,36 +306,9 @@ class ClipboardToCloudManager:
         self._exec(app=app or QApplication(sys.argv))
         self._icons = self._set_icons()
 
-    def _set_icons(self):
-        """Initialise et retourne un dictionnaire d'icônes utilisées dans l'application."""
-        return {
-            CLOUD: QIcon(
-                QPixmap(
-                    ServiceDirectoryAndFile.resource_path(f"Icons/{CLOUD}.png")
-                ).scaledToWidth(
-                    32, Qt.SmoothTransformation  # type: ignore
-                )
-            ),
-            "Clipboard": QIcon(
-                QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png")
-                ).scaledToWidth(
-                    32, Qt.SmoothTransformation  # type: ignore
-                )
-            ),
-            "Loupe": QIcon(
-                QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Loupe.png")
-                ).scaledToWidth(
-                    32, Qt.SmoothTransformation  # type: ignore
-                )
-            ),
-        }
-
     def _exec(self, app=None):
         """Méthode interne qui exécute les étapes d'initialisation."""
         self.app = app or QApplication(sys.argv)
-        self.tool_tip = ToolTip(app=app)
         self.tray = TrayIcon(app=app)
         self.timer = Timer(app=app)
 
@@ -324,19 +324,24 @@ class ClipboardToCloudManager:
 
     def copy_to_cloud(self) -> None:
         """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
-        self.tray.clipboard.copy_to_cloud()
+        message, type_message = self.tray.clipboard.copy_to_cloud(service=self._service_directory_file)
+        self.show_message(message=message, icon=type_message)
+        
 
     def paste_to_clipboard(self) -> None:
         """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
         if self._service_directory_file.data_is_changed:
-            self.tray.clipboard.paste_to_clipboard()
+            message, type_message = self.tray.clipboard.paste_to_clipboard()
+            self.show_message(message=message, icon=type_message)
 
     def create_trayicon(self):
         self.tray.create_trayicon(self._icons["Clipboard"])
 
     def show_clipboard(self):
         """Affichage du presse-papier"""
-        self.tray.clipboard.show_clipboard()
+        message, type_message = self.tray.clipboard.show_clipboard()
+        if message:
+            self.show_message(message=message, icon=type_message)
 
     def show_message(self, message: str, icon: QIcon, duration: int = 3000):
         """Affichage de la notification avec une durée de 3 secondes par défaut."""
