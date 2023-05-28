@@ -77,14 +77,14 @@ class ServiceDirectoryAndFile:
 
     @staticmethod
     def resource_path(relative_path: str) -> str:
-        """Utilisation du chemin absolu pour PyInstaller option -ONEFILE)"""
+        """Utilisation du chemin absolu pour PyInstaller (option -ONEFILE)."""
         if hasattr(sys, "_MEIPASS"):
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
         return relative_path
 
 
 class ToolTip(QLabel):
-    """Affichage d'un QLabel d'apparence QToolTip"""
+    """Affichage d'un QLabel d'apparence QToolTip."""
 
     def __init__(self, app) -> None:
         super().__init__()
@@ -97,7 +97,7 @@ class ToolTip(QLabel):
 
     def show(self) -> None:
         """Affichage du tooltip au centre de l'écran
-        avec une durée de 2.5 secondes"""
+        avec une durée de 2.5 secondes."""
         super().show()
         self.move(
             int(self.center.x() - self.width() / 2),
@@ -162,7 +162,7 @@ class Clipboard:
             )
 
     def show_clipboard(self) -> None:
-        """Affiche le contenu actuel du presse-papier"""
+        """Affiche le contenu actuel du presse-papier."""
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap().scaledToWidth(
@@ -250,7 +250,7 @@ class ClipboardToCloudManager:
         self.clipboard.paste_to_clipboard()
 
     def create_trayicon(self):
-        """Création et configuration de l'icône de la barre d'état système (system tray icon)"""
+        """Création et configuration de l'icône de la barre d'état système (system tray icon)."""
         self.tray.setIcon(self._icons["Clipboard"])
         self.tray.setVisible(True)
         self.tray.setToolTip(TITLE)
@@ -285,7 +285,7 @@ class ClipboardToCloudManager:
         self.tray.setContextMenu(menu)
 
     def tray_reason(self, reason: int):
-        """Affichage du menu (Windows) avec le clic gauche"""
+        """Affichage du menu (Windows) avec le clic gauche."""
         if reason == self.tray.Trigger:  # type: ignore
             self.tray.contextMenu().popup(QCursor.pos())
 
@@ -294,11 +294,11 @@ class ClipboardToCloudManager:
         self.clipboard.show_clipboard()
 
     def show_message(self, message: str, icon: QIcon, duration: int = 3000):
-        """Affichage de la notification avec une durée de 3 secondes par défaut"""
+        """Affichage de la notification avec une durée de 3 secondes par défaut."""
         self.tray.showMessage(TITLE, message, icon, duration)
 
     def mainloop(self):
-        """Appel la méthode exec_() de l'objet app"""
+        """Appel la méthode exec_() de l'objet app."""
         sys.exit(manager.app.exec_())
 
 
