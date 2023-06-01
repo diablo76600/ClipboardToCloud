@@ -120,6 +120,8 @@ class MessageManager:
 
 
 class TrayIcon:
+    """_summary_
+    """
     def __init__(self, app, title=None, cloud=None, service=None):
         self.app = app
         self.obj = QSystemTrayIcon()  # objet représentant TrayIcon
