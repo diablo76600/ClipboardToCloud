@@ -90,6 +90,8 @@ class ServiceDirectoryAndFile:
         return relative_path
 
 class MessageManager:
+    """_summary_
+    """
     def __init__(self, tray, service:ServiceDirectoryAndFile):
         self._service_directory_file = service
         self.tray = tray
