@@ -42,6 +42,33 @@ class DirectoryError(Exception):
         """
         self.message = message
 
+class MessageManager:
+    def __init__(self, tray):
+        self._service_directory_file = ServiceDirectoryAndFile()
+        self.tray = tray
+
+    def copy_to_cloud(self) -> None:
+        """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
+        message, type_message = self.tray.clipboard.copy_to_cloud(service=self._service_directory_file)
+        self.show_message(message=message, icon=type_message)
+        
+
+    def paste_to_clipboard(self) -> None:
+        """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
+        #if self._service_directory_file.data_is_changed:
+        message, type_message = self.tray.clipboard.paste_to_clipboard()
+        self.show_message(message=message, icon=type_message)
+
+    def show_clipboard(self):
+        """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."r"""
+        message, type_message = self.tray.clipboard.show_clipboard()
+        if message:
+            self.show_message(message=message, icon=type_message)
+
+    def show_message(self, message: str, icon: QIcon, duration: int = 3000):
+        """Affichage de la notification avec une durée de 3 secondes par défaut."""
+        self.tray.obj.showMessage(TITLE, message, icon, duration)
+
 
 class ServiceDirectoryAndFile:
     """Gestionnaire du répertoire sur le cloud et le fichier binaire."""
@@ -62,7 +89,7 @@ class ServiceDirectoryAndFile:
 
     def data_changed(self):
         """Contrôle si le fichier binaire a été modifié depuis la dernière vérification."""
-        new_data: float = os.stat(self.path_file).st_mtime
+        new_data = os.stat(self.path_file).st_mtime
         if new_data != self.old_data:
             # manager.paste_to_clipboard()  Ne pas dépendre de l'UI
             self.data_is_changed = True
@@ -94,18 +121,18 @@ class TrayIcon:
     def __init__(self, app, title=None, cloud=None):
         self.app = app
         self.obj = QSystemTrayIcon() # objet représentant TrayIcon
-
         self.widget = QWidget()
         self.clipboard = Clipboard(app=app)
-
+        self._icons = self.clipboard._icons
         self.title = title or TITLE
         self.cloud = cloud or CLOUD
-
         self.platform = sys.platform
+        self.message = MessageManager(self)
+        self.create_trayicon()
 
-    def create_trayicon(self, icon):
+    def create_trayicon(self):
         """Création et configuration de l'icône de la barre d'état système (system tray icon)."""
-        self.obj.setIcon(icon)
+        self.obj.setIcon(self._icons["Clipboard"])
         self.obj.setVisible(True)
         self.obj.setToolTip(self.title)
 
@@ -119,7 +146,7 @@ class TrayIcon:
             text=f"Transféré sur {self.cloud}",
             icon=self._icons[self.cloud],
         )
-        opt_copy.triggered.connect(self.clipboard.copy_to_cloud)
+        opt_copy.triggered.connect(self.message.copy_to_cloud)
 
         menu.addAction(opt_copy)
 
@@ -128,7 +155,7 @@ class TrayIcon:
             text="Coller dans le Presse-papier",
             icon=self._icons["Clipboard"],
         )
-        opt_paste.triggered.connect(self.clipboard.paste_to_clipboard)
+        opt_paste.triggered.connect(self.message.paste_to_clipboard)
 
         menu.addAction(opt_paste)
 
@@ -137,7 +164,7 @@ class TrayIcon:
             text="Apperçu du presse-papier",
             icon=self._icons["Loupe"],
         )
-        show_clipboard.triggered.connect(self.clipboard.show_clipboard)
+        show_clipboard.triggered.connect(self.message.show_clipboard)
 
         menu.addAction(show_clipboard)
         menu.addSeparator()
@@ -278,16 +305,11 @@ class Clipboard:
 
 
 class Timer:
-    def __init__(self, app):
-        self.app = app
-
+    def __init__(self):
         self.obj = QTimer()
-
         self._service_directory_file = ServiceDirectoryAndFile()
-
         self._initialize_timer()
 
-    
     def _initialize_timer(self, interval=1000):
         self.obj.setInterval(interval)
         self.obj.timeout.connect(self._service_directory_file.data_changed)
@@ -304,13 +326,14 @@ class ClipboardToCloudManager:
         """
         self._service_directory_file = ServiceDirectoryAndFile()
         self._exec(app=app or QApplication(sys.argv))
-        self._icons = self._set_icons()
 
     def _exec(self, app=None):
         """Méthode interne qui exécute les étapes d'initialisation."""
         self.app = app or QApplication(sys.argv)
         self.tray = TrayIcon(app=app)
-        self.timer = Timer(app=app)
+        self.message = MessageManager(self.tray)
+        #self.timer = Timer(app=app)
+        
 
     def directory_exist_and_create_file_with_title(self) -> None:
         """Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
@@ -322,32 +345,8 @@ class ClipboardToCloudManager:
             )
             sys.exit()
 
-    def copy_to_cloud(self) -> None:
-        """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
-        message, type_message = self.tray.clipboard.copy_to_cloud(service=self._service_directory_file)
-        self.show_message(message=message, icon=type_message)
-        
 
-    def paste_to_clipboard(self) -> None:
-        """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
-        if self._service_directory_file.data_is_changed:
-            message, type_message = self.tray.clipboard.paste_to_clipboard()
-            self.show_message(message=message, icon=type_message)
-
-    def create_trayicon(self):
-        self.tray.create_trayicon(self._icons["Clipboard"])
-
-    def show_clipboard(self):
-        """Affichage du presse-papier"""
-        message, type_message = self.tray.clipboard.show_clipboard()
-        if message:
-            self.show_message(message=message, icon=type_message)
-
-    def show_message(self, message: str, icon: QIcon, duration: int = 3000):
-        """Affichage de la notification avec une durée de 3 secondes par défaut."""
-        self.tray.showMessage(TITLE, message, icon, duration)
-
-    def mainloop(self):
+    def run(self):
         """Appel la méthode exec_() de l'objet app."""
         sys.exit(manager.app.exec_())
 
@@ -355,4 +354,5 @@ class ClipboardToCloudManager:
 if __name__ == "__main__":
     manager = ClipboardToCloudManager()
     manager.directory_exist_and_create_file_with_title()
-    manager.mainloop()
+    Timer()
+    manager.run()
