@@ -124,7 +124,7 @@ class ServiceDirectoryAndFile:
 
 
 class TrayIcon:
-    def __init__(self, app, title=None, cloud=None, service = None):
+    def __init__(self, app, title=None, cloud=None, service=None):
         self.app = app
         self.obj = QSystemTrayIcon()  # objet représentant TrayIcon
         self.widget = QWidget()
@@ -334,7 +334,7 @@ class ClipboardToCloudManager:
     def _exec(self, app=None):
         """Méthode interne qui exécute les étapes d'initialisation."""
         self.app = app or QApplication(sys.argv)
-        self.tray = TrayIcon(app=app, service = self._service_directory_file)
+        self.tray = TrayIcon(app=app, service=self._service_directory_file)
         # self.timer = Timer(app=app)
 
     def directory_exist_and_create_file_with_title(self) -> None:
