@@ -89,10 +89,11 @@ class ServiceDirectoryAndFile:
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
         return relative_path
 
+
 class MessageManager:
-    """_summary_
-    """
-    def __init__(self, tray, service:ServiceDirectoryAndFile):
+    """_summary_"""
+
+    def __init__(self, tray, service: ServiceDirectoryAndFile):
         self._service_directory_file = service
         self.tray = tray
 
@@ -120,18 +121,18 @@ class MessageManager:
 
 
 class TrayIcon:
-    """_summary_
-    """
+    """_summary_"""
+
     def __init__(self, app, title=None, cloud=None, service=None):
         self.app = app
         self.obj = QSystemTrayIcon()  # objet représentant TrayIcon
         self.widget = QWidget()
-        self.clipboard = Clipboard(app=app, service=service)
+        self.clipboard = Clipboard(app=app, service=service)  # type: ignore
         self._icons = self.clipboard._icons
         self.title = title or TITLE
         self.cloud = cloud or CLOUD
         self.platform = sys.platform
-        self.message = MessageManager(self, service)
+        self.message = MessageManager(self, service=service)  # type: ignore
         self.create_trayicon()
 
     def create_trayicon(self):
@@ -203,7 +204,9 @@ class ToolTip(QLabel):
 class Clipboard:
     """Gestionnaire des opérations de copier/coller du presse-papier."""
 
-    def __init__(self, app, path_file=None, cloud=None, service=ServiceDirectoryAndFile):
+    def __init__(
+        self, app, path_file=None, cloud=None, service=ServiceDirectoryAndFile
+    ):
         """Contructeur
         Args:
             app (object): Instance de l'application.
@@ -244,10 +247,10 @@ class Clipboard:
             ),
         }
 
-    def copy_to_cloud(self) ->tuple:
+    def copy_to_cloud(self) -> tuple:
         """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
         message = "Le Presse-papier est vide !!!."
-        type_message = QSystemTrayIcon.Warning # type: ignore
+        type_message = QSystemTrayIcon.Warning  # type: ignore
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap()
@@ -260,7 +263,7 @@ class Clipboard:
                     file.write(text.encode("utf-8"))
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
-            self._service_directory_file.old_data = os.stat(self.path_file).st_mtime # type: ignore
+            self._service_directory_file.old_data = os.stat(self.path_file).st_mtime  # type: ignore
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:
@@ -282,7 +285,7 @@ class Clipboard:
     def show_clipboard(self) -> tuple:
         """Affiche le contenu actuel du presse-papier."""
         message = "Le Presse-papier est vide !!!."
-        type_message = QSystemTrayIcon.Warning # type: ignore
+        type_message = QSystemTrayIcon.Warning  # type: ignore
         if self.clipboard.mimeData().formats():
             message = None
             type_message = None
@@ -324,9 +327,9 @@ class ClipboardToCloudManager:
             app (object, optional): Instance de l'application. Defaults to None.
         """
         self._service_directory_file = ServiceDirectoryAndFile()
+        self.directory_exist_and_create_file_with_title()
         self.app = app or QApplication(sys.argv)
         self.tray = TrayIcon(app=self.app, service=self._service_directory_file)
-        self.directory_exist_and_create_file_with_title()
         self.timer = TimerDataChanged(self.tray, service=self._service_directory_file)
 
     def directory_exist_and_create_file_with_title(self) -> None:
@@ -338,7 +341,6 @@ class ClipboardToCloudManager:
                 self.tray.widget, self._service_directory_file.title, err.message
             )
             sys.exit()
-
 
 
 if __name__ == "__main__":
