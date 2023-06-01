@@ -42,20 +42,25 @@ class DirectoryError(Exception):
         """
         self.message = message
 
+
 class MessageManager:
-    def __init__(self, tray):
-        self._service_directory_file = ServiceDirectoryAndFile()
+    def __init__(self, tray, _service_directory_file):
+        self._service_directory_file = _service_directory_file
         self.tray = tray
 
     def copy_to_cloud(self) -> None:
+        print(self._service_directory_file.data_is_changed)
         """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
-        message, type_message = self.tray.clipboard.copy_to_cloud(service=self._service_directory_file)
+        message, type_message = self.tray.clipboard.copy_to_cloud(
+            service=self._service_directory_file
+        )
         self.show_message(message=message, icon=type_message)
-        
+        print(self._service_directory_file.data_is_changed)
+        if self._service_directory_file.data_is_changed:
+            self.paste_to_clipboard()
 
     def paste_to_clipboard(self) -> None:
         """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
-        #if self._service_directory_file.data_is_changed:
         message, type_message = self.tray.clipboard.paste_to_clipboard()
         self.show_message(message=message, icon=type_message)
 
@@ -84,7 +89,7 @@ class ServiceDirectoryAndFile:
         self.path_file: str = path_file or PATH_FILE
         self.title: str = title or TITLE
 
-        self.old_data = None
+        self.old_data = os.stat(self.path_file).st_mtime
         self.data_is_changed = False
 
     def data_changed(self):
@@ -93,6 +98,7 @@ class ServiceDirectoryAndFile:
         if new_data != self.old_data:
             # manager.paste_to_clipboard()  Ne pas dépendre de l'UI
             self.data_is_changed = True
+            print(new_data, self.old_data)
             self.old_data = new_data
         else:
             self.data_is_changed = False
@@ -118,16 +124,16 @@ class ServiceDirectoryAndFile:
 
 
 class TrayIcon:
-    def __init__(self, app, title=None, cloud=None):
+    def __init__(self, app, title=None, cloud=None, service=None):
         self.app = app
-        self.obj = QSystemTrayIcon() # objet représentant TrayIcon
+        self.obj = QSystemTrayIcon()  # objet représentant TrayIcon
         self.widget = QWidget()
-        self.clipboard = Clipboard(app=app)
+        self.clipboard = Clipboard(app=app, service=service)
         self._icons = self.clipboard._icons
         self.title = title or TITLE
         self.cloud = cloud or CLOUD
         self.platform = sys.platform
-        self.message = MessageManager(self)
+        self.message = MessageManager(self, service)
         self.create_trayicon()
 
     def create_trayicon(self):
@@ -175,7 +181,7 @@ class TrayIcon:
         menu.addAction(quit_app)
 
         self.obj.setContextMenu(menu)
-    
+
     def tray_reason(self, reason: int):
         """Affichage du menu (Windows) avec le clic gauche."""
         if reason == self.obj.Trigger:  # type: ignore
@@ -208,7 +214,7 @@ class ToolTip(QLabel):
 class Clipboard:
     """Gestionnaire des opérations de copier/coller du presse-papier."""
 
-    def __init__(self, app, path_file=None, cloud=None):
+    def __init__(self, app, path_file=None, cloud=None, service=None):
         """Contructeur
         Args:
             app (object): Instance de l'application.
@@ -219,9 +225,8 @@ class Clipboard:
         self.clipboard = app.clipboard()
         self.path_file = path_file or PATH_FILE
         self.cloud = cloud or CLOUD
-
         self._tool_tip = ToolTip(app=app)
-
+        self.service = service
         self._icons = self._set_icons()
 
     def _set_icons(self):
@@ -250,7 +255,7 @@ class Clipboard:
             ),
         }
 
-    def copy_to_cloud(self, service: ServiceDirectoryAndFile) -> None:
+    def copy_to_cloud(self, service) -> None:
         """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
         message = "Le Presse-papier est vide !!!."
         type_message = QSystemTrayIcon.Warning
@@ -284,7 +289,6 @@ class Clipboard:
         else:
             self.clipboard.setText(data.decode("utf-8"))
         return message, type_message
-            
 
     def show_clipboard(self) -> None:
         """Affiche le contenu actuel du presse-papier."""
@@ -314,7 +318,7 @@ class Timer:
         self.obj.setInterval(interval)
         self.obj.timeout.connect(self._service_directory_file.data_changed)
         self.obj.start()
-        
+
 
 class ClipboardToCloudManager:
     """Gestionnaire de l'application et des interactions avec l'utilisateur."""
@@ -330,10 +334,8 @@ class ClipboardToCloudManager:
     def _exec(self, app=None):
         """Méthode interne qui exécute les étapes d'initialisation."""
         self.app = app or QApplication(sys.argv)
-        self.tray = TrayIcon(app=app)
-        self.message = MessageManager(self.tray)
-        #self.timer = Timer(app=app)
-        
+        self.tray = TrayIcon(app=app, service=self._service_directory_file)
+        # self.timer = Timer(app=app)
 
     def directory_exist_and_create_file_with_title(self) -> None:
         """Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
@@ -344,7 +346,6 @@ class ClipboardToCloudManager:
                 self.tray.widget, self._service_directory_file.title, err.message
             )
             sys.exit()
-
 
     def run(self):
         """Appel la méthode exec_() de l'objet app."""
