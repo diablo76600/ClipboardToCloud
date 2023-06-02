@@ -129,7 +129,7 @@ class TrayIcon:
         self.title = title or TITLE
         self.cloud = cloud or CLOUD
         self.platform = sys.platform
-        self.message = MessageManager(self, service)
+        self.message = MessageManager(self, service = service) # type: ignore
         self.create_trayicon()
 
     def create_trayicon(self):
@@ -201,7 +201,7 @@ class ToolTip(QLabel):
 class Clipboard:
     """Gestionnaire des opérations de copier/coller du presse-papier."""
 
-    def __init__(self, app, path_file=None, cloud=None, service=ServiceDirectoryAndFile):
+    def __init__(self, app, path_file=None, cloud=None, service=None):
         """Contructeur
         Args:
             app (object): Instance de l'application.
