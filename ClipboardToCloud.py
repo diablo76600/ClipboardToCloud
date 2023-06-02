@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import (
     QMenu,
     QMessageBox,
     QSystemTrayIcon,
+    QSplashScreen,
 )
 
 # Constantes globales
@@ -89,10 +90,11 @@ class ServiceDirectoryAndFile:
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
         return relative_path
 
+
 class MessageManager:
-    """_summary_
-    """
-    def __init__(self, tray, service:ServiceDirectoryAndFile):
+    """_summary_"""
+
+    def __init__(self, tray, service: ServiceDirectoryAndFile):
         self._service_directory_file = service
         self.tray = tray
 
@@ -129,7 +131,7 @@ class TrayIcon:
         self.title = title or TITLE
         self.cloud = cloud or CLOUD
         self.platform = sys.platform
-        self.message = MessageManager(self, service = service) # type: ignore
+        self.message = MessageManager(self, service=service)  # type: ignore
         self.create_trayicon()
 
     def create_trayicon(self):
@@ -175,11 +177,22 @@ class TrayIcon:
             self.obj.contextMenu().popup(QCursor.pos())
 
 
+class SplashScreen:
+    """Intro"""
+
+    def __init__(self):
+        splash = QSplashScreen(
+            QPixmap(ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png"))
+        )
+        splash.show()
+
+
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip."""
 
-    def __init__(self, app) -> None:
+    def __init__(self, app, ns: int = 2500) -> None:
         super().__init__()
+        self.ns = ns
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
         self.setStyleSheet(
             "border: 1px solid black; background-color: rgb(255,239,213)"
@@ -195,7 +208,7 @@ class ToolTip(QLabel):
             int(self.center.x() - self.width() / 2),
             int(self.center.y() - self.height() / 2),
         )
-        QTimer.singleShot(2500, self.hide)
+        QTimer.singleShot(self.ns, self.hide)
 
 
 class Clipboard:
@@ -242,10 +255,10 @@ class Clipboard:
             ),
         }
 
-    def copy_to_cloud(self) ->tuple:
+    def copy_to_cloud(self) -> tuple:
         """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
         message = "Le Presse-papier est vide !!!."
-        type_message = QSystemTrayIcon.Warning # type: ignore
+        type_message = QSystemTrayIcon.Warning  # type: ignore
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap()
@@ -258,7 +271,7 @@ class Clipboard:
                     file.write(text.encode("utf-8"))
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
-            self._service_directory_file.old_data = os.stat(self.path_file).st_mtime # type: ignore
+            self._service_directory_file.old_data = os.stat(self.path_file).st_mtime  # type: ignore
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:
@@ -280,7 +293,7 @@ class Clipboard:
     def show_clipboard(self) -> tuple:
         """Affiche le contenu actuel du presse-papier."""
         message = "Le Presse-papier est vide !!!."
-        type_message = QSystemTrayIcon.Warning # type: ignore
+        type_message = QSystemTrayIcon.Warning  # type: ignore
         if self.clipboard.mimeData().formats():
             message = None
             type_message = None
@@ -323,6 +336,7 @@ class ClipboardToCloudManager:
         """
         self._service_directory_file = ServiceDirectoryAndFile()
         self.app = app or QApplication(sys.argv)
+        SplashScreen()
         self.tray = TrayIcon(app=self.app, service=self._service_directory_file)
         self.directory_exist_and_create_file_with_title()
         self.timer = TimerDataChanged(self.tray, service=self._service_directory_file)
@@ -336,7 +350,6 @@ class ClipboardToCloudManager:
                 self.tray.widget, self._service_directory_file.title, err.message
             )
             sys.exit()
-
 
 
 if __name__ == "__main__":
