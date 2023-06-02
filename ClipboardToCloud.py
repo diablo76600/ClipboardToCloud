@@ -177,16 +177,6 @@ class TrayIcon:
             self.obj.contextMenu().popup(QCursor.pos())
 
 
-class SplashScreen:
-    """Intro"""
-
-    def __init__(self):
-        splash = QSplashScreen(
-            QPixmap(ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png"))
-        )
-        splash.show()
-
-
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip."""
 
@@ -336,7 +326,6 @@ class ClipboardToCloudManager:
         """
         self._service_directory_file = ServiceDirectoryAndFile()
         self.app = app or QApplication(sys.argv)
-        SplashScreen()
         self.tray = TrayIcon(app=self.app, service=self._service_directory_file)
         self.directory_exist_and_create_file_with_title()
         self.timer = TimerDataChanged(self.tray, service=self._service_directory_file)
