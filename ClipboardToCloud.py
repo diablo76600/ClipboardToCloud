@@ -122,12 +122,12 @@ class ClipboardToCloudManager(QWidget):
             app (object, optional): Instance de l'application. Defaults to None.
         """
         super().__init__()
-        self._service_directory_file = ServiceDirectoryAndFile()
-        self.clipboard = Clipboard(self._service_directory_file)
+        self.service_directory_file = ServiceDirectoryAndFile()
+        self.clipboard = Clipboard(self.service_directory_file)
         self.tray = TrayIcon(self)
         self.directory_exist_and_create_file_with_title()
         self.timer = TimerDataChanged(
-            manager=self, service=self._service_directory_file
+            manager=self, service=self.service_directory_file
         )
 
     def copy_to_cloud(self) -> None:
@@ -153,10 +153,10 @@ class ClipboardToCloudManager(QWidget):
     def directory_exist_and_create_file_with_title(self) -> None:
         """Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
         try:
-            self._service_directory_file.directory_exist_and_create_file_with_title()
+            self.service_directory_file.directory_exist_and_create_file_with_title()
         except DirectoryError as err:
             QMessageBox.warning(
-                parent=self, title=self._service_directory_file.title, text=err.message
+                parent=self, title=self.service_directory_file.title, text=err.message
             )
             sys.exit()
 
@@ -175,10 +175,10 @@ class Clipboard:
         self.path_file = path_file or PATH_FILE
         self.cloud = cloud or CLOUD
         self._tool_tip = ToolTip()
-        self._icons = self._set_icons()
-        self._service_directory_file = service
+        self._icons = self.set_icons()
+        self.service_directory_file = service
 
-    def _set_icons(self):
+    def set_icons(self):
         """Initialise et retourne un dictionnaire d'icônes utilisées dans l'application."""
         return {
             self.cloud: QIcon(
@@ -220,7 +220,7 @@ class Clipboard:
                     file.write(text.encode("utf-8"))
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
-        self._service_directory_file.old_data = os.stat(self.path_file).st_mtime  # type: ignore
+        self.service_directory_file.old_data = os.stat(self.path_file).st_mtime  # type: ignore
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:
@@ -262,7 +262,7 @@ class TimerDataChanged:
         self, manager: ClipboardToCloudManager, service: ServiceDirectoryAndFile
     ):
         self._obj = QTimer()
-        self._manager = manager
+        self.manager = manager
         self._service_directory_file = service
         self._initialize_timer()
 
@@ -274,17 +274,17 @@ class TimerDataChanged:
     def mainloop(self):
         self._service_directory_file.data_changed()
         if self._service_directory_file.data_is_changed:
-            self._manager.paste_to_clipboard()
+            self.manager.paste_to_clipboard()
 
 
 class TrayIcon(QSystemTrayIcon):
     def __init__(self, manager: ClipboardToCloudManager, title=None, cloud=None):
         super().__init__()
-        self._manager = manager
+        self.manager = manager
         self.title = title or TITLE
         self.cloud = cloud or CLOUD
         self.platform = sys.platform
-        self._icons = self._manager.clipboard._icons
+        self._icons = self.manager.clipboard._icons
         self._create_trayicon()
 
     def _create_trayicon(self):
@@ -302,21 +302,21 @@ class TrayIcon(QSystemTrayIcon):
             text=f"Transféré sur {self.cloud}",
             icon=self._icons[self.cloud],
         )
-        opt_copy.triggered.connect(self._manager.copy_to_cloud)
+        opt_copy.triggered.connect(self.manager.copy_to_cloud)
         menu.addAction(opt_copy)
         opt_paste = QAction(
             parent=self,
             text="Coller dans le Presse-papier",
             icon=self._icons["Clipboard"],
         )
-        opt_paste.triggered.connect(self._manager.paste_to_clipboard)
+        opt_paste.triggered.connect(self.manager.paste_to_clipboard)
         menu.addAction(opt_paste)
         show_clipboard = QAction(
             parent=self,
             text="Apperçu du presse-papier",
             icon=self._icons["Loupe"],
         )
-        show_clipboard.triggered.connect(self._manager.show_clipboard)
+        show_clipboard.triggered.connect(self.manager.show_clipboard)
         menu.addAction(show_clipboard)
         menu.addSeparator()
         quit_app = QAction(parent=self, text="Quitter")
