@@ -8,7 +8,6 @@
 
 import os
 import sys
-import time
 from typing import Union
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QImage, QPixmap, QCursor
@@ -123,8 +122,7 @@ class MessageManager:
 
 
 class TrayIcon:
-    """Creation """
-    def __init__(self, app=None, title=None, cloud=None, service=None, icons=None):
+    def __init__(self, app, title=None, cloud=None, service=None):
         self.app = app
         self.obj = QSystemTrayIcon()  # objet représentant TrayIcon
         self.widget = QWidget()
