@@ -88,89 +88,6 @@ class ServiceDirectoryAndFile:
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
         return relative_path
 
-class MessageManager:
-    def __init__(self, tray, service:ServiceDirectoryAndFile):
-        self._service_directory_file = service
-        self.tray = tray
-
-    def copy_to_cloud(self) -> None:
-        """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
-        message, type_message = self.tray.clipboard.copy_to_cloud()
-        self.show_message(message=message, icon=type_message)
-        if self._service_directory_file.data_is_changed:
-            self.paste_to_clipboard()
-
-    def paste_to_clipboard(self) -> None:
-        """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
-        message, type_message = self.tray.clipboard.paste_to_clipboard()
-        self.show_message(message=message, icon=type_message)
-
-    def show_clipboard(self):
-        """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."r"""
-        message, type_message = self.tray.clipboard.show_clipboard()
-        if message:
-            self.show_message(message=message, icon=type_message)
-
-    def show_message(self, message: str, icon: QIcon, duration: int = 3000):
-        """Affichage de la notification avec une durée de 3 secondes par défaut."""
-        self.tray.obj.showMessage(TITLE, message, icon, duration)
-
-
-class TrayIcon:
-    def __init__(self, app, title=None, cloud=None, service=None):
-        self.app = app
-        self.obj = QSystemTrayIcon()  # objet représentant TrayIcon
-        self.widget = QWidget()
-        self.clipboard = Clipboard(app=app, service=service)
-        self._icons = self.clipboard._icons
-        self.title = title or TITLE
-        self.cloud = cloud or CLOUD
-        self.platform = sys.platform
-        self.message = MessageManager(self, service)
-        self.create_trayicon()
-
-    def create_trayicon(self):
-        """Création et configuration de l'icône de la barre d'état système (system tray icon)."""
-        self.obj.setIcon(self._icons["Clipboard"])
-        self.obj.setVisible(True)
-        self.obj.setToolTip(self.title)
-
-        if self.platform == "win32":
-            self.obj.activated.connect(self.tray_reason)
-
-        menu = QMenu(self.widget)
-        opt_copy = QAction(
-            parent=self.widget,
-            text=f"Transféré sur {self.cloud}",
-            icon=self._icons[self.cloud],
-        )
-        opt_copy.triggered.connect(self.message.copy_to_cloud)
-        menu.addAction(opt_copy)
-        opt_paste = QAction(
-            parent=self.widget,
-            text="Coller dans le Presse-papier",
-            icon=self._icons["Clipboard"],
-        )
-        opt_paste.triggered.connect(self.message.paste_to_clipboard)
-        menu.addAction(opt_paste)
-        show_clipboard = QAction(
-            parent=self.widget,
-            text="Apperçu du presse-papier",
-            icon=self._icons["Loupe"],
-        )
-        show_clipboard.triggered.connect(self.message.show_clipboard)
-        menu.addAction(show_clipboard)
-        menu.addSeparator()
-        quit_app = QAction(parent=self.widget, text="Quitter")
-        quit_app.triggered.connect(self.app.quit)
-        menu.addAction(quit_app)
-        self.obj.setContextMenu(menu)
-
-    def tray_reason(self, reason: int):
-        """Affichage du menu (Windows) avec le clic gauche."""
-        if reason == self.obj.Trigger:  # type: ignore
-            self.obj.contextMenu().popup(QCursor.pos())
-
 
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip."""
@@ -247,7 +164,7 @@ class ClipboardToCloudManager(QWidget):
 class Clipboard:
     """Gestionnaire des opérations de copier/coller du presse-papier."""
 
-    def __init__(self, app, path_file=None, cloud=None, service=ServiceDirectoryAndFile):
+    def __init__(self, service: ServiceDirectoryAndFile, path_file=None, cloud=None):
         """Contructeur
         Args:
             app (object): Instance de l'application.
@@ -303,7 +220,7 @@ class Clipboard:
                     file.write(text.encode("utf-8"))
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
-            self._service_directory_file.old_data = os.stat(self.path_file).st_mtime # type: ignore
+        self.service_directory_file.old_data = os.stat(self.path_file).st_mtime  # type: ignore
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:
@@ -376,16 +293,8 @@ class TrayIcon(QSystemTrayIcon):
         self.setVisible(True)
         self.setToolTip(self.title)
 
-    def __init__(self, app=None):
-        """Constructeur
-        Args:
-            app (object, optional): Instance de l'application. Defaults to None.
-        """
-        self._service_directory_file = ServiceDirectoryAndFile()
-        self.app = app or QApplication(sys.argv)
-        self.tray = TrayIcon(app=self.app, service=self._service_directory_file)
-        self.directory_exist_and_create_file_with_title()
-        self.timer = TimerDataChanged(self.tray, service=self._service_directory_file)
+        if self.platform == "win32":
+            self.activated.connect(self._tray_reason)
 
         menu = QMenu()
         opt_copy = QAction(
@@ -419,6 +328,7 @@ class TrayIcon(QSystemTrayIcon):
         """Affichage du menu (Windows) avec le clic gauche."""
         if reason == self.Trigger:  # type: ignore
             self.contextMenu().popup(QCursor.pos())
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
