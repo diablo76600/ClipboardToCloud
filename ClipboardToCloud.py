@@ -22,7 +22,6 @@ from PyQt5.QtWidgets import (
     QSystemTrayIcon,
     QSplashScreen,
 )
-import test
 
 # Constantes globales
 VERSION = "1.9.04"
