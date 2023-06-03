@@ -285,9 +285,9 @@ class TrayIcon(QSystemTrayIcon):
         self.cloud = cloud or CLOUD
         self.platform = sys.platform
         self._icons = self._manager.clipboard._icons
-        self.create_trayicon()
+        self._create_trayicon()
 
-    def create_trayicon(self):
+    def _create_trayicon(self):
         """Création et configuration de l'icône de la barre d'état système (system tray icon)."""
         self.setIcon(self._icons["Clipboard"])
         self.setVisible(True)
