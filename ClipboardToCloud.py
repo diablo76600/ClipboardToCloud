@@ -8,6 +8,7 @@
 
 import os
 import sys
+import time
 from typing import Union
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QImage, QPixmap, QCursor
@@ -122,7 +123,8 @@ class MessageManager:
 
 
 class TrayIcon:
-    def __init__(self, app, title=None, cloud=None, service=None):
+    """Creation """
+    def __init__(self, app=None, title=None, cloud=None, service=None, icons=None):
         self.app = app
         self.obj = QSystemTrayIcon()  # objet représentant TrayIcon
         self.widget = QWidget()
@@ -175,16 +177,6 @@ class TrayIcon:
         """Affichage du menu (Windows) avec le clic gauche."""
         if reason == self.obj.Trigger:  # type: ignore
             self.obj.contextMenu().popup(QCursor.pos())
-
-
-class SplashScreen:
-    """Intro"""
-
-    def __init__(self):
-        splash = QSplashScreen(
-            QPixmap(ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png"))
-        )
-        splash.show()
 
 
 class ToolTip(QLabel):
@@ -336,7 +328,6 @@ class ClipboardToCloudManager:
         """
         self._service_directory_file = ServiceDirectoryAndFile()
         self.app = app or QApplication(sys.argv)
-        SplashScreen()
         self.tray = TrayIcon(app=self.app, service=self._service_directory_file)
         self.directory_exist_and_create_file_with_title()
         self.timer = TimerDataChanged(self.tray, service=self._service_directory_file)
