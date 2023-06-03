@@ -263,7 +263,7 @@ class TimerDataChanged:
     ):
         self._obj = QTimer()
         self.manager = manager
-        self._service_directory_file = service
+        self.service_directory_file = service
         self._initialize_timer()
 
     def _initialize_timer(self, interval=1000):
@@ -272,8 +272,8 @@ class TimerDataChanged:
         self._obj.start()
 
     def mainloop(self):
-        self._service_directory_file.data_changed()
-        if self._service_directory_file.data_is_changed:
+        self.service_directory_file.data_changed()
+        if self.service_directory_file.data_is_changed:
             self.manager.paste_to_clipboard()
 
 
