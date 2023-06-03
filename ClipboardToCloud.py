@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import (
     QSystemTrayIcon,
     QSplashScreen,
 )
+import test
 
 # Constantes globales
 VERSION = "1.9.04"
@@ -231,14 +232,14 @@ class Clipboard:
             ),
             "Clipboard": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png")
+                    ServiceDirectoryAndFile.resource_path("Icons/clipboard.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Loupe": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Loupe.png")
+                    ServiceDirectoryAndFile.resource_path("Icons/loupe.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
