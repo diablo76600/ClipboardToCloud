@@ -232,14 +232,14 @@ class Clipboard:
             ),
             "Clipboard": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/clipboard.png")
+                    ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Loupe": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/loupe.png")
+                    ServiceDirectoryAndFile.resource_path("Icons/Loupe.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
