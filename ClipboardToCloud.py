@@ -19,9 +19,9 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # Constantes globales
 VERSION = "1.9.04"
-CLOUD = "Dropbox"
+#CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
-# CLOUD = "Mon Drive"
+CLOUD = "Mon Drive"
 HOME = os.path.expanduser("~")
 PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
 PATH_FILE = PATH_CLOUD + "clipboard.data"

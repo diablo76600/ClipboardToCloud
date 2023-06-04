@@ -1,6 +1,5 @@
 import sys
 import os
-from PyQt5.QtCore import QFileSystemWatcher
 from pathlib import Path
 
 
@@ -33,7 +32,7 @@ class ServiceDirectoryAndFile:
         except FileNotFoundError:
             self.old_data = None
             self.directory_exist_and_create_file_with_title()
-        self.data_is_changed = False
+        self.modif_is_changed = False
 
     def data_changed(self):
         """Contrôle si le fichier binaire a été modifié depuis la dernière vérification."""
