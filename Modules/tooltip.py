@@ -5,9 +5,9 @@ from PyQt5.QtCore import Qt, QTimer
 class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip."""
 
-    def __init__(self, app, ns: int = 2500) -> None:
+    def __init__(self, app, ms: int = 2500) -> None:
         super().__init__()
-        self.ns = ns
+        self.ms = ms
         self.setWindowFlags(Qt.ToolTip)  # type: ignore
         self.setStyleSheet(
             "border: 1px solid black; background-color: rgb(255,239,213)"
@@ -23,4 +23,4 @@ class ToolTip(QLabel):
             int(self.center.x() - self.width() / 2),
             int(self.center.y() - self.height() / 2),
         )
-        QTimer.singleShot(self.ns, self.hide)
+        QTimer.singleShot(self.ms, self.hide)
