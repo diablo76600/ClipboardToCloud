@@ -1,6 +1,7 @@
 import sys
 import os
 
+
 class DirectoryError(Exception):
     """Levée d'exception lorsque la création du répertoire sur le cloud échoue."""
 
