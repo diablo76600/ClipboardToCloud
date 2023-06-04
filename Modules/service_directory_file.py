@@ -1,5 +1,7 @@
 import sys
 import os
+from PyQt5.QtCore import QFileSystemWatcher
+from pathlib import Path
 
 
 class DirectoryError(Exception):
@@ -30,6 +32,7 @@ class ServiceDirectoryAndFile:
             self.old_data = os.stat(self.path_file).st_mtime
         except FileNotFoundError:
             self.old_data = None
+            self.directory_exist_and_create_file_with_title()
         self.data_is_changed = False
 
     def data_changed(self):
@@ -44,11 +47,12 @@ class ServiceDirectoryAndFile:
 
     def directory_exist_and_create_file_with_title(self) -> None:
         """Controle et création du répertoire sur le Cloud"""
-        if not os.path.isdir(self.path_cloud):
+        if not os.path.isdir(self.path_cloud) or self.old_data is None:
             try:
-                os.mkdir(self.path_cloud)
-                with open(self.path_file, "wb") as file:
-                    file.write(self.title.encode("utf-8"))
+                file = Path(self.path_file)
+                file.parent.mkdir(exist_ok=True, parents=True)
+                file.write_text(self.title, encoding="utf-8")
+                self.old_data = os.stat(self.path_file).st_mtime
             except PermissionError:
                 raise DirectoryError(
                     message=f"Impossible de créer le répertoire {self.path_cloud}"
