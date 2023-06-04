@@ -13,15 +13,12 @@ from Modules.service_directory_file import ServiceDirectoryAndFile, DirectoryErr
 from Modules.clipboard_manager import ClipboardManager
 from Modules.tray_icon import TrayIcon
 from Modules.data_changed import TimerDataChanged
-'''from clipboard_manager import ClipboardManager
-from tray_icon import TrayIcon
-from data_changed import TimerDataChanged'''
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 
 # Constantes globales
-VERSION = "1.9.04" 
+VERSION = "1.9.04"
 CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
