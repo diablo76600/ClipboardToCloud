@@ -9,16 +9,19 @@
 import os
 import sys
 from typing import Union
-from service_directory_file import DirectoryError, ServiceDirectoryAndFile
-from clipboard_manager import ClipboardManager
+from Modules.service_directory_file import ServiceDirectoryAndFile, DirectoryError
+from Modules.clipboard_manager import ClipboardManager
+from Modules.tray_icon import TrayIcon
+from Modules.data_changed import TimerDataChanged
+'''from clipboard_manager import ClipboardManager
 from tray_icon import TrayIcon
-from data_changed import TimerDataChanged
+from data_changed import TimerDataChanged'''
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 
 # Constantes globales
-VERSION = "1.9.04"
+VERSION = "1.9.04" 
 CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
@@ -28,15 +31,11 @@ PATH_FILE = PATH_CLOUD + "clipboard.data"
 TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 
-class ClipboardToCloudManager(QWidget):
+class ClipboardToCloudManager:
     """Gestionnaire de l'application et des interactions avec l'utilisateur."""
 
     def __init__(self):
-        """Constructeur
-        Args:
-            app (object, optional): Instance de l'application. Defaults to None.
-        """
-        super().__init__()
+        """Constructeur"""
         self.service_directory_file = ServiceDirectoryAndFile(
             path_cloud=PATH_CLOUD, path_file=PATH_FILE, title=TITLE
         )
