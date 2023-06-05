@@ -40,7 +40,7 @@ class TrayIcon(QSystemTrayIcon):
         menu = QMenu()
         opt_copy = QAction(
             parent=self,
-            text=f"Transféré sur {self.cloud}",
+            text=f"Transférer sur {self.cloud}",
             icon=self._icons[self.cloud],
         )
         opt_copy.triggered.connect(self.manager.copy_to_cloud)
