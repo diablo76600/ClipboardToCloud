@@ -1,4 +1,8 @@
 import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from service_directory_file import ServiceDirectoryAndFile
 from tooltip import ToolTip
 from PyQt5.QtGui import QIcon, QImage, QPixmap
@@ -9,12 +13,15 @@ from PyQt5.QtWidgets import QSystemTrayIcon
 class ClipboardManager:
     """Gestionnaire des opérations de copier/coller du presse-papier."""
 
-    def __init__(self, app, service: ServiceDirectoryAndFile, path_file, cloud):
+    def __init__(
+        self, app, service: ServiceDirectoryAndFile, path_file: str, cloud: str
+    ):
         """Contructeur
         Args:
             app (object): Instance de l'application.
-            path_file (str, optional): Chemin du fichier binaire. Defaults to None.
-            cloud (str, optional): Nom du service cloud. Defaults to None.
+            service (ServiceDirectoryAndFile) Instance de la classe ServiceDirectoryAndFile.
+            path_file (str): Chemin du fichier binaire. Defaults to None.
+            cloud (str): Nom du service cloud. Defaults to None.
         """
         self.app = app
         self.clipboard = app.clipboard()
@@ -66,7 +73,7 @@ class ClipboardManager:
                     file.write(text.encode("utf-8"))
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
-        self.service_directory_file.old_data = os.stat(self.path_file).st_mtime  # type: ignore
+        self.service_directory_file.file_is_changed = True
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:

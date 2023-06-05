@@ -6,6 +6,12 @@ class ToolTip(QLabel):
     """Affichage d'un QLabel d'apparence QToolTip."""
 
     def __init__(self, app, ms: int = 2500) -> None:
+        """Constructeur
+
+        Args:
+            app (object): Instance de l'application
+            ms (int, optional):Délai en milliseconde. Defaults to 2500.
+        """
         super().__init__()
         self.ms = ms
         self.setWindowFlags(Qt.ToolTip)  # type: ignore

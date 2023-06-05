@@ -8,20 +8,23 @@
 
 import os
 import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from typing import Union
 from Modules.service_directory_file import ServiceDirectoryAndFile, DirectoryError
 from Modules.clipboard_manager import ClipboardManager
 from Modules.tray_icon import TrayIcon
-from Modules.data_changed import TimerDataChanged
+from Modules.file_watcher import FileWatcher
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox
 
 
 # Constantes globales
 VERSION = "1.9.04"
-#CLOUD = "Dropbox"
+CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
-CLOUD = "Mon Drive"
+# CLOUD = "Mon Drive"
 HOME = os.path.expanduser("~")
 PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
 PATH_FILE = PATH_CLOUD + "clipboard.data"
@@ -44,7 +47,9 @@ class ClipboardToCloudManager:
         )
         self.tray = TrayIcon(app=app, manager=self, title=TITLE, cloud=CLOUD)
         self.directory_exist_and_create_file_with_title()
-        self.timer = TimerDataChanged(manager=self, service=self.service_directory_file)
+        self.timer = FileWatcher(
+            path_file=PATH_FILE, manager=self, service=self.service_directory_file
+        )
 
     def copy_to_cloud(self) -> None:
         """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""

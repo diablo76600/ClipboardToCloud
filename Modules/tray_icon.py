@@ -1,4 +1,3 @@
-
 import sys
 from PyQt5.QtWidgets import (
     QAction,
@@ -8,14 +7,17 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QCursor
 
+
 class TrayIcon(QSystemTrayIcon):
+    """Création du TrayIcon"""
+
     def __init__(self, app, manager, title, cloud):
         super().__init__()
         self.widget_messagebox = QWidget()
         self.app = app
         self.manager = manager
         self.title = title
-        self.cloud = cloud 
+        self.cloud = cloud
         self.platform = sys.platform
         self._icons = self.manager.clipboard._icons
         self._create_trayicon()
