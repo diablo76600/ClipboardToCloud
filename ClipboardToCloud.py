@@ -48,7 +48,7 @@ class ClipboardToCloudManager:
         )
         self.tray = TrayIcon(app=app, manager=self, title=TITLE, cloud=CLOUD)
         self.directory_exist_and_create_file_with_title()
-        self.timer = FileWatcher(
+        self.watcher = FileWatcher(
             path_file=PATH_FILE, manager=self, service=self.service_directory_file
         )
 
@@ -63,7 +63,7 @@ class ClipboardToCloudManager:
         self.show_message(message=message, icon=type_message)
 
     def show_clipboard(self):
-        """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."r"""
+        """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
         message, type_message = self.clipboard.show_clipboard()
         if message:
             self.show_message(message=message, icon=type_message)
