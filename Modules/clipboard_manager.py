@@ -7,15 +7,13 @@ from service_directory_file import ServiceDirectoryAndFile
 from tooltip import ToolTip
 from PyQt5.QtGui import QIcon, QImage, QPixmap
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QSystemTrayIcon
+from PyQt5.QtWidgets import QSystemTrayIcon, QApplication
 
 
 class ClipboardManager:
     """Gestionnaire des opérations de copier/coller du presse-papier."""
 
-    def __init__(
-        self, app, service: ServiceDirectoryAndFile, path_file: str, cloud: str
-    ):
+    def __init__(self, app: QApplication, service: ServiceDirectoryAndFile, path_file: str, cloud: str) -> None:
         """Contructeur
         Args:
             app (object): Instance de l'application.
@@ -23,6 +21,7 @@ class ClipboardManager:
             path_file (str): Chemin du fichier binaire. Defaults to None.
             cloud (str): Nom du service cloud. Defaults to None.
         """
+
         self.app = app
         self.clipboard = app.clipboard()
         self.path_file = path_file
@@ -31,8 +30,9 @@ class ClipboardManager:
         self._icons = self.set_icons()
         self.service_directory_file = service
 
-    def set_icons(self):
+    def set_icons(self) -> dict:
         """Initialise et retourne un dictionnaire d'icônes utilisées dans l'application."""
+
         return {
             self.cloud: QIcon(
                 QPixmap(
@@ -59,6 +59,7 @@ class ClipboardManager:
 
     def copy_to_cloud(self) -> tuple:
         """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
+
         message = "Le Presse-papier est vide !!!."
         type_message = QSystemTrayIcon.Warning  # type: ignore
         if self.clipboard.mimeData().formats():
@@ -78,6 +79,7 @@ class ClipboardManager:
 
     def paste_to_clipboard(self) -> tuple:
         """Colle le contenu du fichier binaire du cloud vers le presse-papier."""
+
         with open(self.path_file, "rb") as file:
             data = file.read()
         header = data[0:4]
@@ -94,6 +96,7 @@ class ClipboardManager:
 
     def show_clipboard(self) -> tuple:
         """Affiche le contenu actuel du presse-papier."""
+
         message = "Le Presse-papier est vide !!!."
         type_message = QSystemTrayIcon.Warning  # type: ignore
         if self.clipboard.mimeData().formats():

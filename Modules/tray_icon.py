@@ -1,17 +1,21 @@
 import sys
-from PyQt5.QtWidgets import (
-    QAction,
-    QWidget,
-    QMenu,
-    QSystemTrayIcon,
-)
+from PyQt5.QtWidgets import QAction, QWidget, QMenu, QSystemTrayIcon, QApplication
 from PyQt5.QtGui import QCursor
 
 
 class TrayIcon(QSystemTrayIcon):
     """Création du TrayIcon"""
 
-    def __init__(self, app, manager, title, cloud):
+    def __init__(self, app: QApplication, manager, title: str, cloud: str) -> None:
+        """Constructeur
+
+        Args:
+            app (QApplication): Instance de l'application
+            manager (ClipboardToCloudManager): Instance de ClipboardToCloudManager
+            title (str): Titre de l'application
+            cloud (str): Nom du cloud
+        """
+        
         super().__init__()
         self.widget_messagebox = QWidget()
         self.app = app
@@ -22,12 +26,14 @@ class TrayIcon(QSystemTrayIcon):
         self._icons = self.manager.clipboard._icons
         self._create_trayicon()
 
-    def _create_trayicon(self):
+    def _create_trayicon(self) -> None:
         """Création et configuration de l'icône de la barre d'état système (system tray icon)."""
+
         self.setIcon(self._icons["Clipboard"])
         self.setVisible(True)
         self.setToolTip(self.title)
 
+        # Affichage du menu avec le clic gauche
         if self.platform == "win32":
             self.activated.connect(self._tray_reason)
 
@@ -61,5 +67,6 @@ class TrayIcon(QSystemTrayIcon):
 
     def _tray_reason(self, reason: int):
         """Affichage du menu (Windows) avec le clic gauche."""
+
         if reason == self.Trigger:  # type: ignore
             self.contextMenu().popup(QCursor.pos())

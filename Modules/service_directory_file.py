@@ -6,7 +6,7 @@ from pathlib import Path
 class DirectoryError(Exception):
     """Levée d'exception lorsque la création du répertoire sur le cloud échoue."""
 
-    def __init__(self, message):
+    def __init__(self, message) -> None:
         """Contructeur
         Args:
             message (str): Affiche le message d'erreur associé à l'exception.
@@ -17,13 +17,14 @@ class DirectoryError(Exception):
 class ServiceDirectoryAndFile:
     """Gestionnaire du répertoire sur le cloud et le fichier binaire."""
 
-    def __init__(self, path_cloud: str, path_file: str, title: str):
+    def __init__(self, path_cloud: str, path_file: str, title: str) -> None:
         """Constructeur
         Args:
             path_cloud (str, optional): Chemin du répertoire sur le cloud. Defaults to None.
             path_file (str, optional): Chemin du fichier binaire sur le cloud. Defaults to None.
             title (str, optional): Titre de l'application. Defaults to None.
         """
+        
         self.path_cloud = path_cloud
         self.path_file = path_file
         self.title = title
@@ -31,6 +32,7 @@ class ServiceDirectoryAndFile:
 
     def directory_exist_and_create_file_with_title(self) -> None:
         """Controle et création du répertoire sur le Cloud"""
+
         if not os.path.isdir(self.path_cloud):
             try:
                 file = Path(self.path_file)
@@ -44,6 +46,7 @@ class ServiceDirectoryAndFile:
     @staticmethod
     def resource_path(relative_path: str) -> str:
         """Utilisation du chemin absolu pour PyInstaller (option -ONEFILE)."""
+
         if hasattr(sys, "_MEIPASS"):
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
         return relative_path

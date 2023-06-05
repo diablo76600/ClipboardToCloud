@@ -36,6 +36,7 @@ class ClipboardToCloudManager:
 
     def __init__(self):
         """Constructeur"""
+        
         self.service_directory_file = ServiceDirectoryAndFile(
             path_cloud=PATH_CLOUD, path_file=PATH_FILE, title=TITLE
         )
