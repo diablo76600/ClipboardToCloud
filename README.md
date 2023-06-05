@@ -3,8 +3,8 @@
 Par défaut, il fonctionne avec Dropbox mais il peut être adapté pour d'autres clouds (Google Drive etc...).
 Il utilise l'interface graphique Qt (PyQt5) pour afficher une icône dans la barre système et interagir avec l'utilisateur via des actions du menu contextuel :
 
-`Transféré sur Cloud (Dropbox)` : Copie le contenu du presse-papier dans un fichier sur le cloud (Chemin Cloud/.ClipboardToCloud/clipboard.data).
+        `Transféré sur Cloud (Dropbox)` : Copie le contenu du presse-papier dans un fichier sur le cloud (Chemin Cloud/.ClipboardToCloud/clipboard.data).
 
-`Coller dans le presse-papier` : Copie le contenu du fichier du cloud dans le presse-papier.
+        `Coller dans le presse-papier` : Copie le contenu du fichier du cloud dans le presse-papier.
 
-`Afficher le presse-papier` : Permet d'avoir un apercu rapide du contenu du presse-papier
+        `Afficher le presse-papier` : Permet d'avoir un apercu rapide du contenu du presse-papier
