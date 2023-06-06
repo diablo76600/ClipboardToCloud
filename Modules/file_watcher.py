@@ -13,7 +13,7 @@ class FileWatcher:
             manager (ClipboardToCloud): Instance de la classe ClipboardToCloudManager.
             service (ServiceDirectoryAndFile): Instance de la classe ServiceDirectoryAndFile.
         """
-        
+
         self._watcher = QFileSystemWatcher()
         self._watcher.addPath(path_file)
         self._watcher.fileChanged.connect(self.file_changed)
@@ -23,6 +23,6 @@ class FileWatcher:
     def file_changed(self) -> None:
         """ """
 
-        if self.service_directory_file.file_is_changed is False:
+        if not self.service_directory_file.file_is_changed:
             self.manager.paste_to_clipboard()
         self.service_directory_file.file_is_changed = False
