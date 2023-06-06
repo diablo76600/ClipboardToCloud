@@ -8,9 +8,6 @@
 
 import os
 import sys
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from typing import Union
 from Modules.service_directory_file import ServiceDirectoryAndFile, DirectoryError
 from Modules.clipboard_manager import ClipboardManager
@@ -22,7 +19,7 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # Constantes globales
 VERSION = "1.9.04"
-CLOUD = "Dropbox"
+CLOUD = "Mon Drive"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
 HOME = os.path.expanduser("~")
@@ -64,6 +61,7 @@ class ClipboardToCloudManager:
 
     def show_clipboard(self):
         """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
+
         message, type_message = self.clipboard.show_clipboard()
         if message:
             self.show_message(message=message, icon=type_message)
