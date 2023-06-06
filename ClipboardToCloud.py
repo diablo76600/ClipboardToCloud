@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # Constantes globales
 VERSION = "1.9.04"
-CLOUD = "OneDrive"
+CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
 HOME = os.path.expanduser("~")
