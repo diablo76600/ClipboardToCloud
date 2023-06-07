@@ -22,13 +22,15 @@ class FileWatcher:
         # Créez un QTimer pour vérifier périodiquement les modifications
         self.timer = QTimer()
         self.timer.timeout.connect(self.file_changed)
-        self.timer.start(1000)  # Vérifier toutes les 1 second
+        self.timer.start(1000)  # Vérifier toutes les 1 seconde
         self.service_directory_file = service
         self.manager = manager
 
     
         """ """
     def file_changed(self):
+        """Controle des modification du fichier binaire"""
+
         self.service_directory_file.check_file_changed()
         if not self.service_directory_file.file_is_changed:
             self.manager.paste_to_clipboard()

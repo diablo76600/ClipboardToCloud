@@ -61,16 +61,20 @@ class ServiceDirectoryAndFile:
         return data
 
     def check_file_changed(self):
+        """Controle de la modification du fichier binaire"""
         current_modified = os.stat(self.path_file).st_mtime
         if current_modified != self.last_modified:
             self.last_modified = current_modified
             self.file_is_changed = False
         else:
             self.file_is_changed = True
+
     def save_pixmap_to_cloud(self, pixmap) -> None:
+        """Enregistrement du QPixmap sur le cloud"""
         pixmap.save(self.path_file, "PNG")
 
     def save_text_to_cloud(self, text) -> None:
+        """Enregistrement du texte sur le cloud"""
         with open(self.path_file, "wb") as file:
                     file.write(text.encode("utf-8"))
 
