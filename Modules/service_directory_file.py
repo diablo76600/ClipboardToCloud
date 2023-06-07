@@ -44,11 +44,11 @@ class ServiceDirectoryAndFile:
                     message=f"Impossible de créer le répertoire {self.path_cloud}"
                 )
 
-    def read_binary_file(self):
+    def read_binary_file(self) -> bytes:
         """Lecture du fichier binaire sur le cloud
 
         Returns:
-            _type_: _description_
+           bytes: Fichier binaire
         """
         while True:
             try:
@@ -58,6 +58,13 @@ class ServiceDirectoryAndFile:
             except FileNotFoundError:
                 time.sleep(0.1)
         return data
+
+    def save_pixmap_to_cloud(self, pixmap) -> None:
+        pixmap.save(self.path_file, "PNG")
+
+    def save_text_to_cloud(self, text) -> None:
+        with open(self.path_file, "wb") as file:
+                    file.write(text.encode("utf-8"))
 
     @staticmethod
     def resource_path(relative_path: str) -> str:
