@@ -55,7 +55,7 @@ class ServiceDirectoryAndFile:
                 with open(self.path_file, "rb") as file:
                     data = file.read()
                     break
-            except FileNotFoundError:
+            except (FileNotFoundError, PermissionError):
                 time.sleep(0.1)
         return data
 
