@@ -76,7 +76,6 @@ class ClipboardManager:
         """Colle le contenu du fichier binaire du cloud vers le presse-papier."""
 
         data = self.service_directory_file.read_binary_file()
-
         header = data[0:4]
         message = "Texte collé dans le Presse-papier."
         type_message = self._icons["Clipboard"]
