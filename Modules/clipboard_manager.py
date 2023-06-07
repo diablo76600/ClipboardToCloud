@@ -1,4 +1,3 @@
-import os
 from service_directory_file import ServiceDirectoryAndFile
 from tooltip import ToolTip
 from PyQt5.QtGui import QIcon, QImage, QPixmap
@@ -69,12 +68,7 @@ class ClipboardManager:
                 self.service_directory_file.save_text_to_cloud(text)
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
-<<<<<<< HEAD
-        self.service_directory_file.last_modified = os.stat(self.path_file).st_mtime
-        self.service_directory_file.paste_clipboard = False
-=======
         self.service_directory_file.file_is_changed = True
->>>>>>> e54dd27431362f8ee023c2b51268a1f1f1e55d6f
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:
