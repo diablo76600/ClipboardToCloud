@@ -32,6 +32,7 @@ class FileWatcher:
         """Controle des modification du fichier binaire"""
 
         self.service_directory_file.check_file_changed()
-        if not self.service_directory_file.file_is_changed:
+        if self.service_directory_file.file_is_changed and not self.service_directory_file.paste_clipboard:
             self.manager.paste_to_clipboard()
-        self.service_directory_file.file_is_changed = False
+        self.service_directory_file.file_is_changed = True
+        self.service_directory_file.paste_clipboard = True

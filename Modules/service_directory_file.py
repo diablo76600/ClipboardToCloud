@@ -29,6 +29,7 @@ class ServiceDirectoryAndFile:
         self.path_cloud = path_cloud
         self.path_file = path_file
         self.title = title
+        self.paste_clipboard = True
         self.file_is_changed = False
         try:           
             self.last_modified = os.stat(self.path_file).st_mtime
@@ -69,9 +70,9 @@ class ServiceDirectoryAndFile:
         current_modified = os.stat(self.path_file).st_mtime
         if current_modified != self.last_modified:
             self.last_modified = current_modified
-            self.file_is_changed = False
-        else:
             self.file_is_changed = True
+        else:
+            self.file_is_changed = False
 
     def save_pixmap_to_cloud(self, pixmap) -> None:
         """Enregistrement du QPixmap sur le cloud"""
