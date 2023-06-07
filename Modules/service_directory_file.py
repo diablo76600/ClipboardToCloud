@@ -30,6 +30,7 @@ class ServiceDirectoryAndFile:
         self.path_file = path_file
         self.title = title
         self.file_is_changed = False
+        self.last_modified = os.stat(self.path_file).st_mtime
 
     def directory_exist_and_create_file_with_title(self) -> None:
         """Controle et création du répertoire sur le Cloud"""
@@ -59,6 +60,13 @@ class ServiceDirectoryAndFile:
                 time.sleep(0.1)
         return data
 
+    def check_file_changed(self):
+        current_modified = os.stat(self.path_file).st_mtime
+        if current_modified != self.last_modified:
+            self.last_modified = current_modified
+            self.file_is_changed = False
+        else:
+            self.file_is_changed = True
     def save_pixmap_to_cloud(self, pixmap) -> None:
         pixmap.save(self.path_file, "PNG")
 
