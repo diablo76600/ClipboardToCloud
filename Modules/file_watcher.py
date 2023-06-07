@@ -35,4 +35,4 @@ class FileWatcher:
         if self.service_directory_file.file_is_changed and not self.service_directory_file.paste_clipboard:
             self.manager.paste_to_clipboard()
         self.service_directory_file.file_is_changed = True
-        self.service_directory_file.paste_clipboard = True
+        self.service_directory_file.paste_clipboard = False
