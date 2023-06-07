@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 from pathlib import Path
 
 
@@ -42,6 +43,21 @@ class ServiceDirectoryAndFile:
                 raise DirectoryError(
                     message=f"Impossible de créer le répertoire {self.path_cloud}"
                 )
+
+    def read_binary_file(self):
+        """Lecture du fichier binaire sur le cloud
+
+        Returns:
+            _type_: _description_
+        """
+        while True:
+            try:
+                with open(self.path_file, "rb") as file:
+                    data = file.read()
+                    break
+            except FileNotFoundError:
+                time.sleep(0.1)
+        return data
 
     @staticmethod
     def resource_path(relative_path: str) -> str:

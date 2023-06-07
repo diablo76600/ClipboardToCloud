@@ -1,8 +1,3 @@
-import os
-import sys
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from service_directory_file import ServiceDirectoryAndFile
 from tooltip import ToolTip
 from PyQt5.QtGui import QIcon, QImage, QPixmap
@@ -80,8 +75,8 @@ class ClipboardManager:
     def paste_to_clipboard(self) -> tuple:
         """Colle le contenu du fichier binaire du cloud vers le presse-papier."""
 
-        with open(self.path_file, "rb") as file:
-            data = file.read()
+        data = self.service_directory_file.read_binary_file()
+
         header = data[0:4]
         message = "Texte collé dans le Presse-papier."
         type_message = self._icons["Clipboard"]
