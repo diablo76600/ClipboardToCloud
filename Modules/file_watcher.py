@@ -1,5 +1,7 @@
+import os
+from PyQt5.QtCore import QTimer, QObject
 from service_directory_file import ServiceDirectoryAndFile
-from PyQt5.QtCore import QFileSystemWatcher
+
 
 
 class FileWatcher:
@@ -20,9 +22,12 @@ class FileWatcher:
         self.service_directory_file = service
         self.manager = manager
 
-    def file_changed(self) -> None:
+    
         """ """
+    def file_changed(self):
+        """Controle des modification du fichier binaire"""
 
+        self.service_directory_file.check_file_changed()
         if not self.service_directory_file.file_is_changed:
             self.manager.paste_to_clipboard()
         self.service_directory_file.file_is_changed = False
