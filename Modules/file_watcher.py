@@ -16,9 +16,13 @@ class FileWatcher:
             service (ServiceDirectoryAndFile): Instance de la classe ServiceDirectoryAndFile.
         """
 
-        self.watcher = QFileSystemWatcher()
-        self.watcher.addPath(path_file)
-        self.watcher.fileChanged.connect(self.file_changed)
+        self.file_path = path_file
+        self.last_modified = os.stat(path_file).st_mtime
+
+        # Créez un QTimer pour vérifier périodiquement les modifications
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.file_changed)
+        self.timer.start(1000)  # Vérifier toutes les 1 seconde
         self.service_directory_file = service
         self.manager = manager
 
