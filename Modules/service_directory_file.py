@@ -48,7 +48,7 @@ class ServiceDirectoryAndFile:
         """Lecture du fichier binaire sur le cloud
 
         Returns:
-           bytes: Fichier binaire
+            bytes: Contenu du fichier binaire
         """
         while True:
             try:
