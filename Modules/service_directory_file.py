@@ -30,7 +30,11 @@ class ServiceDirectoryAndFile:
         self.path_file = path_file
         self.title = title
         self.file_is_changed = False
-        self.last_modified = os.stat(self.path_file).st_mtime
+        try:           
+            self.last_modified = os.stat(self.path_file).st_mtime
+        except (FileExistsError, FileNotFoundError):
+            self.directory_exist_and_create_file_with_title()
+            self.last_modified = os.stat(self.path_file).st_mtime
 
     def directory_exist_and_create_file_with_title(self) -> None:
         """Controle et création du répertoire sur le Cloud"""
