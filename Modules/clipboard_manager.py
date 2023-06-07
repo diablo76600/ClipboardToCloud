@@ -60,13 +60,12 @@ class ClipboardManager:
         if self.clipboard.mimeData().formats():
             if self.clipboard.mimeData().hasImage():
                 pixmap = self.clipboard.pixmap()
-                pixmap.save(self.path_file, "PNG")
+                self.service_directory_file.save_pixmap_to_cloud(pixmap)
                 message = f"Image transférée sur {self.cloud}"
                 type_message = QIcon(pixmap)
             elif self.clipboard.mimeData().hasText():
                 text = self.clipboard.text()
-                with open(self.path_file, "wb") as file:
-                    file.write(text.encode("utf-8"))
+                self.service_directory_file.save_text_to_cloud(text)
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
         self.service_directory_file.file_is_changed = True
