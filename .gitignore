@@ -1,2 +1,6 @@
 Modules/__pycache__/
 
+Modules/__pycache__/clipboard_manager.cpython-311.pyc
+Modules/__pycache__/file_watcher.cpython-311.pyc
+Modules/__pycache__/service_directory_file.cpython-311.pyc
+Modules/__pycache__/__init__.cpython-311.pyc
