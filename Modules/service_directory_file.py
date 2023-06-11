@@ -30,7 +30,7 @@ class ServiceDirectoryAndFile:
         self.path_file = path_file
         self.title = title
         self.manager = manager
-        self.file_is_changed = True
+        self.file_is_changed = False
     
     def directory_exist_and_create_file_with_title(self) -> None:
         """Controle et création du répertoire sur le Cloud"""
