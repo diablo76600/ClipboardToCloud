@@ -32,21 +32,21 @@ class ClipboardManager:
         return {
             self.cloud: QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path(f"Icons/{self.cloud}.png")
+                    ServiceDirectoryAndFile.resource_path(f"Assets/{self.cloud}.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Clipboard": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png")
+                    ServiceDirectoryAndFile.resource_path("Assets/Clipboard.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Loupe": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Loupe.png")
+                    ServiceDirectoryAndFile.resource_path("Assets/Loupe.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
