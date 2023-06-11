@@ -69,7 +69,7 @@ class ClipboardManager:
                 self.service_directory_file.save_text_to_cloud(text)
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
-        self.service_directory_file.file_is_changed = False
+        self.service_directory_file.file_is_changed = True
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:

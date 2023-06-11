@@ -59,7 +59,6 @@ class ServiceDirectoryAndFile:
             except (FileNotFoundError, PermissionError):
                 time.sleep(0.1)
                 self.manager.watcher.addPath(self.path_file)
-                
         return data
 
     def save_pixmap_to_cloud(self, pixmap) -> None:
