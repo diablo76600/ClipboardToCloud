@@ -1,10 +1,10 @@
 import os
-from PyQt5.QtCore import QTimer, QObject
+from PyQt5.QtCore import QFileSystemWatcher
 from service_directory_file import ServiceDirectoryAndFile
 
 
 
-class FileWatcher:
+class FileWatcher(QFileSystemWatcher):
     """Surveillance des modifications du fichier binaire sur le cloud."""
 
     def __init__(self, path_file: str, manager, service: ServiceDirectoryAndFile) -> None:
@@ -15,14 +15,10 @@ class FileWatcher:
             manager (ClipboardToCloud): Instance de la classe ClipboardToCloudManager.
             service (ServiceDirectoryAndFile): Instance de la classe ServiceDirectoryAndFile.
         """
-
-        self.file_path = path_file
-        self.last_modified = os.stat(path_file).st_mtime
-
-        # Créez un QTimer pour vérifier périodiquement les modifications
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.file_changed)
-        self.timer.start(1000)  # Vérifier toutes les 1 seconde
+        super().__init__()
+        self.path_file = path_file
+        self.addPath(self.path_file)
+        self.fileChanged.connect(self.file_changed)
         self.service_directory_file = service
         self.manager = manager
 
@@ -30,9 +26,8 @@ class FileWatcher:
         """ """
     def file_changed(self):
         """Controle des modification du fichier binaire"""
-
-        self.service_directory_file.check_file_changed()
-        if self.service_directory_file.file_is_changed and not self.service_directory_file.paste_clipboard:
+        
+        if not self.service_directory_file.file_is_changed:
             self.manager.paste_to_clipboard()
         self.service_directory_file.file_is_changed = True
-        self.service_directory_file.paste_clipboard = False
+

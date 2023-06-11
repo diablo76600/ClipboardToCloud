@@ -35,8 +35,9 @@ class ClipboardToCloudManager:
         """Constructeur"""
         
         self.service_directory_file = ServiceDirectoryAndFile(
-            path_cloud=PATH_CLOUD, path_file=PATH_FILE, title=TITLE
+            path_cloud=PATH_CLOUD, manager=self, path_file=PATH_FILE, title=TITLE
         )
+        
         self.clipboard = ClipboardManager(
             app=app,
             service=self.service_directory_file,

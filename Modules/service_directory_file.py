@@ -18,7 +18,7 @@ class DirectoryError(Exception):
 class ServiceDirectoryAndFile:
     """Gestionnaire du répertoire sur le cloud et le fichier binaire."""
 
-    def __init__(self, path_cloud: str, path_file: str, title: str) -> None:
+    def __init__(self, path_cloud: str, manager, path_file: str, title: str) -> None:
         """Constructeur
         Args:
             path_cloud (str, optional): Chemin du répertoire sur le cloud. Defaults to None.
@@ -29,14 +29,9 @@ class ServiceDirectoryAndFile:
         self.path_cloud = path_cloud
         self.path_file = path_file
         self.title = title
-        self.paste_clipboard = True
-        self.file_is_changed = False
-        try:           
-            self.last_modified = os.stat(self.path_file).st_mtime
-        except (FileExistsError, FileNotFoundError):
-            self.directory_exist_and_create_file_with_title()
-            self.last_modified = os.stat(self.path_file).st_mtime
-
+        self.manager = manager
+        self.file_is_changed = True
+    
     def directory_exist_and_create_file_with_title(self) -> None:
         """Controle et création du répertoire sur le Cloud"""
 
@@ -63,16 +58,9 @@ class ServiceDirectoryAndFile:
                     break
             except (FileNotFoundError, PermissionError):
                 time.sleep(0.1)
+                self.manager.watcher.addPath(self.path_file)
+                
         return data
-
-    def check_file_changed(self):
-        """Controle de la modification du fichier binaire"""
-        current_modified = os.stat(self.path_file).st_mtime
-        if current_modified != self.last_modified:
-            self.last_modified = current_modified
-            self.file_is_changed = True
-        else:
-            self.file_is_changed = False
 
     def save_pixmap_to_cloud(self, pixmap) -> None:
         """Enregistrement du QPixmap sur le cloud"""
