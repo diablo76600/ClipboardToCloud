@@ -30,5 +30,5 @@ class FileWatcher(QFileSystemWatcher):
             self.addPath(self.path_file)
         if not self.service_directory_file.file_is_changed:
             self.manager.paste_to_clipboard()
-        self.service_directory_file.file_is_changed = False
+            self.service_directory_file.file_is_changed = False
 
