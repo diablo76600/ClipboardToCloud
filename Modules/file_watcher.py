@@ -1,12 +1,11 @@
 from PyQt5.QtCore import QFileSystemWatcher
 from service_directory_file import ServiceDirectoryAndFile
-from PyQt5.QtWidgets import QMainWindow
 
 
 class FileWatcher(QFileSystemWatcher):
     """Surveillance des modifications du fichier binaire sur le cloud."""
 
-    def __init__(self, path_file: str, manager:QMainWindow, service: ServiceDirectoryAndFile) -> None:
+    def __init__(self, path_file: str, manager, service: ServiceDirectoryAndFile) -> None:
         """Constructeur
 
         Args:
