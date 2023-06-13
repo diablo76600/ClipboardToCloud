@@ -22,8 +22,6 @@ class FileWatcher(QFileSystemWatcher):
         self.service_directory_file = service
         self.manager = manager
 
-    
-        """ """
     def file_changed(self):
         """Controle des modification du fichier binaire"""
         if len(self.files()) == 0:
