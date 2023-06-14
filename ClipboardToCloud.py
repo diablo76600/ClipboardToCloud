@@ -14,11 +14,11 @@ from Modules.clipboard_manager import ClipboardManager
 from Modules.tray_icon import TrayIcon
 from Modules.file_watcher import FileWatcher
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
 
 
 # Constantes globales
-VERSION = "1.9.04"
+VERSION = "1.9.05"
 CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
@@ -28,15 +28,16 @@ PATH_FILE = PATH_CLOUD + "clipboard.data"
 TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 
-class ClipboardToCloudManager:
+class ClipboardToCloudManager(QMainWindow):
     """Gestionnaire de l'application et des interactions avec l'utilisateur."""
 
     def __init__(self):
         """Constructeur"""
         
         self.service_directory_file = ServiceDirectoryAndFile(
-            path_cloud=PATH_CLOUD, path_file=PATH_FILE, title=TITLE
+            path_cloud=PATH_CLOUD, manager=self, path_file=PATH_FILE, title=TITLE
         )
+        
         self.clipboard = ClipboardManager(
             app=app,
             service=self.service_directory_file,
@@ -48,6 +49,7 @@ class ClipboardToCloudManager:
         self.watcher = FileWatcher(
             path_file=PATH_FILE, manager=self, service=self.service_directory_file
         )
+        super().__init__()
 
     def copy_to_cloud(self) -> None:
         """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""

@@ -32,21 +32,21 @@ class ClipboardManager:
         return {
             self.cloud: QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path(f"Icons/{self.cloud}.png")
+                    ServiceDirectoryAndFile.resource_path(f"Assets/{self.cloud}.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Clipboard": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Clipboard.png")
+                    ServiceDirectoryAndFile.resource_path("Assets/Clipboard.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
             ),
             "Loupe": QIcon(
                 QPixmap(
-                    ServiceDirectoryAndFile.resource_path("Icons/Loupe.png")
+                    ServiceDirectoryAndFile.resource_path("Assets/Loupe.png")
                 ).scaledToWidth(
                     32, Qt.SmoothTransformation  # type: ignore
                 )
@@ -70,7 +70,6 @@ class ClipboardManager:
                 message = f"Texte transféré sur {self.cloud}"
                 type_message = self._icons["Clipboard"]
         self.service_directory_file.file_is_changed = True
-        self.service_directory_file.last_modified = os.stat(self.path_file).st_mtime
         return message, type_message
 
     def paste_to_clipboard(self) -> tuple:
