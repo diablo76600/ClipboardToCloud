@@ -24,6 +24,7 @@ class TrayIcon(QSystemTrayIcon):
         self.cloud = cloud
         self.platform = sys.platform
         self._icons = self.manager.clipboard._icons
+        self.messageClicked.connect(self.manager.show_clipboard)
         self._create_trayicon()
 
     def _create_trayicon(self) -> None:
