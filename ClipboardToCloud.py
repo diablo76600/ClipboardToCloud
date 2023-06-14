@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
 
 
 # Constantes globales
-VERSION = "1.9.04"
+VERSION = "1.9.05"
 CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
