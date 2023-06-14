@@ -15,7 +15,7 @@ class TrayIcon(QSystemTrayIcon):
             title (str): Titre de l'application
             cloud (str): Nom du cloud
         """
-        
+
         super().__init__()
         self.widget_messagebox = QWidget()
         self.app = app
@@ -24,6 +24,7 @@ class TrayIcon(QSystemTrayIcon):
         self.cloud = cloud
         self.platform = sys.platform
         self._icons = self.manager.clipboard._icons
+        self.messageClicked.connect(self.manager.show_clipboard)
         self._create_trayicon()
 
     def _create_trayicon(self) -> None:
