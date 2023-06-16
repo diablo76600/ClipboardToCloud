@@ -87,6 +87,6 @@ class ClipboardToCloudManager(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    SplashScreen(app=app, title=TITLE)
+    SplashScreen(title=TITLE)
     manager = ClipboardToCloudManager()
     sys.exit(app.exec_())
