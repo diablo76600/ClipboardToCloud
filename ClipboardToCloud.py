@@ -8,7 +8,6 @@
 
 import os
 import sys
-from typing import Union
 from Modules.service_directory_file import ServiceDirectoryAndFile, DirectoryError
 from Modules.clipboard_manager import ClipboardManager
 from Modules.tray_icon import TrayIcon
@@ -16,7 +15,6 @@ from Modules.file_watcher import FileWatcher
 from Modules.splash_screen import SplashScreen
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
-
 
 # Constantes globales
 VERSION = "1.9.05"
