@@ -8,17 +8,16 @@
 
 import os
 import sys
-from typing import Union
 from Modules.service_directory_file import ServiceDirectoryAndFile, DirectoryError
 from Modules.clipboard_manager import ClipboardManager
 from Modules.tray_icon import TrayIcon
 from Modules.file_watcher import FileWatcher
+from Modules.splash_screen import SplashScreen
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
 
-
 # Constantes globales
-VERSION = "1.9.05"
+VERSION = "1.9.06"
 CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
@@ -33,6 +32,7 @@ class ClipboardToCloudManager(QMainWindow):
 
     def __init__(self):
         """Constructeur"""
+        
         
         self.service_directory_file = ServiceDirectoryAndFile(
             path_cloud=PATH_CLOUD, manager=self, path_file=PATH_FILE, title=TITLE
@@ -87,5 +87,6 @@ class ClipboardToCloudManager(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    SplashScreen(title=TITLE)
     manager = ClipboardToCloudManager()
     sys.exit(app.exec_())
