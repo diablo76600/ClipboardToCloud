@@ -17,7 +17,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
 
 # Constantes globales
-VERSION = "1.9.05"
+VERSION = "1.9.06"
 CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
