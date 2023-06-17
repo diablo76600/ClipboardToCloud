@@ -9,4 +9,4 @@ Il utilise l'interface graphique Qt (PyQt5) pour afficher une icône dans la bar
 
         `Afficher le presse-papier` : Permet d'avoir un apercu rapide du contenu du presse-papier
 
-Remerciement à @fred1559
+Remerciement à @fred1599
