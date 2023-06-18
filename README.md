@@ -1,6 +1,6 @@
-# `ClipboardToCloud`
+#                               `ClipboardToCloud`
 
-![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/4c653667-85d3-4e05-bd54-9a7ad8e73c7f)
+                        ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/4c653667-85d3-4e05-bd54-9a7ad8e73c7f)
 
 * ClipboardToCloud est une application de gestion du presse-papier qui permet de copier des données vers un service cloud spécifié et de coller ces données depuis le cloud vers un presse-papier distant via un fichier binaire . Il permet donc de récupérer le contenu du presse-papier en temps réel d'un ordinateur à un autre sans tenir compte de l'OS et du réseau, pour cela il faut que l'application soit lancée sur les deux ordinateurs.
 Par défaut, il fonctionne avec Dropbox mais il peut être adapté pour d'autres clouds (Google Drive etc...).
