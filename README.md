@@ -17,7 +17,7 @@ Il utilise l'interface graphique Qt (PyQt5) pour afficher une icône dans la bar
 Windows
 
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/92b7bac0-2693-48c5-a595-f38048d2e020)
-![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/2df54ed3-be64-4722-86a8-0c20dee46ab4)
+![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/975539a6-0647-4e72-b575-a1f0c631b15c)
 
 
 
