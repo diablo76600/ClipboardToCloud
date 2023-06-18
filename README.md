@@ -36,7 +36,7 @@ Linux
 
 
 
-Transert Mac -> Windows
+Transfert Mac -> Windows
 
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/ca05a9e0-2964-43ec-aefe-8c1a09ebee0b)
 
