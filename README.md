@@ -13,17 +13,24 @@ Il utilise l'interface graphique Qt (PyQt5) pour afficher une icône dans la bar
         `Afficher le presse-papier` : Permet d'avoir un apercu rapide du contenu du presse-papier
         
 
-Windows     
+Windows
+
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/92b7bac0-2693-48c5-a595-f38048d2e020)
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/2df54ed3-be64-4722-86a8-0c20dee46ab4)
 
+
 Mac
+
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/14a8aa13-454c-4c5a-bf4e-acf83363f025)
 
+
 Linux
+
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/e254d08b-faef-4c84-be2a-0b70b6ffb22d)
 
+
 Transert Mac -> Windows
+
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/ca05a9e0-2964-43ec-aefe-8c1a09ebee0b)
 
 
