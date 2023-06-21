@@ -14,5 +14,5 @@ class SplashScreen(QSplashScreen):
         )
         self.setPixmap(self.pixmap)
         self.show()
-        self.showMessage(title, Qt.AlignCenter | Qt.AlignBottom, Qt.white)  # type: ignore 
+        self.showMessage(title, Qt.AlignCenter | Qt.AlignBottom, Qt.white)  # type: ignore
         time.sleep(1)
