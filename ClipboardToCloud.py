@@ -36,7 +36,6 @@ class ClipboardToCloudManager(QMainWindow):
         self.service_directory_file = ServiceDirectoryAndFile(
             path_cloud=PATH_CLOUD, manager=self, path_file=PATH_FILE, title=TITLE
         )
-
         self.clipboard = ClipboardManager(
             app=app,
             service=self.service_directory_file,
@@ -44,7 +43,7 @@ class ClipboardToCloudManager(QMainWindow):
             cloud=CLOUD,
         )
         self.tray = TrayIcon(app=app, manager=self, title=TITLE, cloud=CLOUD)
-        self.directory_exist_and_create_file_with_title()
+        self.directory_exist_and_create_file()
         self.watcher = FileWatcher(
             path_file=PATH_FILE, manager=self, service=self.service_directory_file
         )
@@ -63,6 +62,7 @@ class ClipboardToCloudManager(QMainWindow):
         self.perform_clipboard_action(action="show_clipboard")
 
     def perform_clipboard_action(self, action: str) -> None:
+        """Performs a clipboard action and displays any message"""
         method = getattr(self.clipboard, action)
         message, type_message = method()
         if message:
@@ -72,7 +72,7 @@ class ClipboardToCloudManager(QMainWindow):
         """Affichage de la notification avec une durée de 3 secondes par défaut."""
         self.tray.showMessage(TITLE, message, icon, duration)
 
-    def directory_exist_and_create_file_with_title(self) -> None:
+    def directory_exist_and_create_file(self) -> None:
         """Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
         try:
             self.service_directory_file.directory_exist_and_create_file_with_title()

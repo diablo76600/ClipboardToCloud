@@ -34,33 +34,34 @@ class ServiceDirectoryAndFile:
         self.file_is_changed = False
     
     def directory_exist_and_create_file_with_title(self) -> None:
-        """Controle et création du répertoire sur le Cloud"""
-
+        """Controle et création du répertoire sur le Cloud
+        """
+        # Check if directory exists
         if not os.path.isdir(self.path_cloud):
+            # Try creating directory and file 
             try:
+                # Get file path
                 file = Path(self.path_file)
+                # Create parent directories
                 file.parent.mkdir(exist_ok=True, parents=True)
+                # Write title to file
                 file.write_text(self.title, encoding="utf-8")
+            # Handle permission error   
             except PermissionError:
                 raise DirectoryError(
-                    message=f"Impossible de créer le répertoire {self.path_cloud}"
+                    f"Impossible de créer le répertoire {self.path_cloud}"
                 )
 
     def read_binary_file(self) -> bytes:
         """Lecture du fichier binaire sur le cloud
-
-        Returns:
-            bytes: Contenu du fichier binaire
         """
         while True:
             try:
                 with open(self.path_file, "rb") as file:
-                    data = file.read()
-                    break
+                    return file.read()
             except (FileNotFoundError, PermissionError):
                 time.sleep(0.1)
                 self.manager.watcher.addPath(self.path_file)
-        return data
 
     def save_pixmap_to_cloud(self, pixmap) -> None:
         """Enregistrement du QPixmap sur le cloud"""
@@ -74,7 +75,6 @@ class ServiceDirectoryAndFile:
     @staticmethod
     def resource_path(relative_path: str) -> str:
         """Utilisation du chemin absolu pour PyInstaller (option -ONEFILE)."""
-
         if hasattr(sys, "_MEIPASS"):
             return os.path.join(sys._MEIPASS, relative_path)  # type: ignore
         return relative_path
