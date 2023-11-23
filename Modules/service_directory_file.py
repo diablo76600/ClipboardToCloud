@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 
 
+
 class DirectoryError(Exception):
     """Levée d'exception lorsque la création du répertoire sur le cloud échoue."""
 

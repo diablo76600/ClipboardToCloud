@@ -20,7 +20,6 @@ class ToolTip(QLabel):
         self.setStyleSheet(
             "border: 1px solid black; background-color: rgb(255,239,213)"
         )
-        self.setWindowOpacity(0.8)
         self.center = app.screens()[0].availableGeometry().center()
 
     def show(self) -> None:
