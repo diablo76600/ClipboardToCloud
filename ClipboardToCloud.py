@@ -58,15 +58,15 @@ class ClipboardToCloudManager(QMainWindow):
         """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
         self.perform_clipboard_action("paste_to_clipboard")
 
+    def show_clipboard(self) -> None:
+        """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
+        self.perform_clipboard_action(action="show_clipboard")
+
     def perform_clipboard_action(self, action: str) -> None:
         method = getattr(self.clipboard, action)
         message, type_message = method()
         if message:
             self.show_message(message=message, icon=type_message)
-
-    def show_clipboard(self) -> None:
-        """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
-        self.perform_clipboard_action(action="show_clipboard")
 
     def show_message(self, message: str, icon: QIcon, duration: int = 3000) -> None:
         """Affichage de la notification avec une durée de 3 secondes par défaut."""
