@@ -6,6 +6,7 @@
     Par défaut, il fonctionne avec Dropbox mais il peut être adapté
     pour d'autre Cloud (Google Drive etc...) """
 
+
 import os
 import sys
 from Modules.service_directory_file import ServiceDirectoryAndFile, DirectoryError
@@ -17,27 +18,24 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
 
 # Constantes globales
-VERSION = "1.9.06"
+VERSION = "1.9.7"
 CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
 HOME = os.path.expanduser("~")
 PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
-PATH_FILE = PATH_CLOUD + "clipboard.data"
+PATH_FILE = f"{PATH_CLOUD}clipboard.data"
 TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 
 class ClipboardToCloudManager(QMainWindow):
     """Gestionnaire de l'application et des interactions avec l'utilisateur."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Constructeur"""
-        
-        
         self.service_directory_file = ServiceDirectoryAndFile(
             path_cloud=PATH_CLOUD, manager=self, path_file=PATH_FILE, title=TITLE
         )
-        
         self.clipboard = ClipboardManager(
             app=app,
             service=self.service_directory_file,
@@ -45,7 +43,7 @@ class ClipboardToCloudManager(QMainWindow):
             cloud=CLOUD,
         )
         self.tray = TrayIcon(app=app, manager=self, title=TITLE, cloud=CLOUD)
-        self.directory_exist_and_create_file_with_title()
+        self.directory_exist_and_create_file()
         self.watcher = FileWatcher(
             path_file=PATH_FILE, manager=self, service=self.service_directory_file
         )
@@ -53,26 +51,28 @@ class ClipboardToCloudManager(QMainWindow):
 
     def copy_to_cloud(self) -> None:
         """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
-        message, type_message = self.clipboard.copy_to_cloud()
-        self.show_message(message=message, icon=type_message)
+        self.perform_clipboard_action("copy_to_cloud")
 
     def paste_to_clipboard(self) -> None:
         """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
-        message, type_message = self.clipboard.paste_to_clipboard()
-        self.show_message(message=message, icon=type_message)
+        self.perform_clipboard_action("paste_to_clipboard")
 
-    def show_clipboard(self):
+    def show_clipboard(self) -> None:
         """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
+        self.perform_clipboard_action(action="show_clipboard")
 
-        message, type_message = self.clipboard.show_clipboard()
+    def perform_clipboard_action(self, action: str) -> None:
+        """Performs a clipboard action and displays any message"""
+        method = getattr(self.clipboard, action)
+        message, type_message = method()
         if message:
             self.show_message(message=message, icon=type_message)
 
-    def show_message(self, message: str, icon: QIcon, duration: int = 3000):
+    def show_message(self, message: str, icon: QIcon, duration: int = 3000) -> None:
         """Affichage de la notification avec une durée de 3 secondes par défaut."""
         self.tray.showMessage(TITLE, message, icon, duration)
 
-    def directory_exist_and_create_file_with_title(self) -> None:
+    def directory_exist_and_create_file(self) -> None:
         """Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
         try:
             self.service_directory_file.directory_exist_and_create_file_with_title()

@@ -28,17 +28,26 @@ class TrayIcon(QSystemTrayIcon):
         self._create_trayicon()
 
     def _create_trayicon(self) -> None:
-        """Création et configuration de l'icône de la barre d'état système (system tray icon)."""
 
+        # Set up tray icon
         self.setIcon(self._icons["Clipboard"])
         self.setVisible(True)
         self.setToolTip(self.title)
 
-        # Affichage du menu avec le clic gauche
         if self.platform == "win32":
             self.activated.connect(self._tray_reason)
 
+        # Create menu
         menu = QMenu()
+        self._add_copy_option(menu)
+        self._add_paste_option(menu)
+        self._add_show_clipboard_option(menu)
+        menu.addSeparator()
+        self._add_quit_option(menu)
+
+        self.setContextMenu(menu)
+
+    def _add_copy_option(self, menu):
         opt_copy = QAction(
             parent=self,
             text=f"Transférer sur {self.cloud}",
@@ -46,6 +55,8 @@ class TrayIcon(QSystemTrayIcon):
         )
         opt_copy.triggered.connect(self.manager.copy_to_cloud)
         menu.addAction(opt_copy)
+
+    def _add_paste_option(self, menu):
         opt_paste = QAction(
             parent=self,
             text="Coller dans le Presse-papier",
@@ -53,6 +64,8 @@ class TrayIcon(QSystemTrayIcon):
         )
         opt_paste.triggered.connect(self.manager.paste_to_clipboard)
         menu.addAction(opt_paste)
+
+    def _add_show_clipboard_option(self, menu):
         show_clipboard = QAction(
             parent=self,
             text="Apperçu du presse-papier",
@@ -60,11 +73,11 @@ class TrayIcon(QSystemTrayIcon):
         )
         show_clipboard.triggered.connect(self.manager.show_clipboard)
         menu.addAction(show_clipboard)
-        menu.addSeparator()
+
+    def _add_quit_option(self, menu):
         quit_app = QAction(parent=self, text="Quitter")
         quit_app.triggered.connect(self.app.exit)
         menu.addAction(quit_app)
-        self.setContextMenu(menu)
 
     def _tray_reason(self, reason: int):
         """Affichage du menu (Windows) avec le clic gauche."""

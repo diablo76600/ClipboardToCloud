@@ -14,8 +14,5 @@ class SplashScreen(QSplashScreen):
         )
         self.setPixmap(self.pixmap)
         self.show()
-        txt = ""
-        for letter in title:
-            txt += letter
-            self.showMessage(txt, Qt.AlignCenter | Qt.AlignBottom, Qt.white)  # type: ignore
-            time.sleep(0.01)
+        self.showMessage(title, Qt.AlignCenter | Qt.AlignBottom, Qt.white)  # type: ignore
+        time.sleep(1)
