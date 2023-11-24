@@ -9,7 +9,13 @@ from PyQt5.QtWidgets import QSystemTrayIcon, QApplication
 class ClipboardManager:
     """Gestionnaire des opérations de copier/coller du presse-papier."""
 
-    def __init__(self, app: QApplication, service: ServiceDirectoryAndFile, path_file: str, cloud: str) -> None:
+    def __init__(
+        self,
+        app: QApplication,
+        service: ServiceDirectoryAndFile,
+        path_file: str,
+        cloud: str,
+    ) -> None:
         """Contructeur
         Args:
             app (object): Instance de l'application.
@@ -30,11 +36,13 @@ class ClipboardManager:
         """Initialise et retourne un dictionnaire d'icônes utilisées dans l'application."""
 
         def get_icon(asset_name):
-                return QIcon(
+            return QIcon(
                 QPixmap(
                     ServiceDirectoryAndFile.resource_path(f"Assets/{asset_name}.png")
-                ).scaledToWidth(32, Qt.SmoothTransformation) # type: ignore
-            )   
+                ).scaledToWidth(
+                    32, Qt.SmoothTransformation
+                )  # type: ignore
+            )
 
         return {
             self.cloud: get_icon(self.cloud),
@@ -45,25 +53,22 @@ class ClipboardManager:
     def copy_to_cloud(self) -> tuple:
         """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
 
-        message = "Le Presse-papier est vide !!!."
-        type_message = QSystemTrayIcon.Warning  # type: ignore
-        if self.clipboard.mimeData().formats():
-            if self.clipboard.mimeData().hasImage():
-                pixmap = self.clipboard.pixmap()
-                self.service_directory_file.save_pixmap_to_cloud(pixmap)
-                message = f"Image transférée sur {self.cloud}"
-                type_message = QIcon(pixmap)
-            elif self.clipboard.mimeData().hasText():
-                text = self.clipboard.text()
-                self.service_directory_file.save_text_to_cloud(text)
-                message = f"Texte transféré sur {self.cloud}"
-                type_message = self._icons["Clipboard"]
+        if not self.clipboard.mimeData().formats():
+            return "Le Presse-papier est vide !!!.", QSystemTrayIcon.Warning  # type: ignore
+
+        if self.clipboard.mimeData().hasImage():
+            pixmap = self.clipboard.pixmap()
+            self.service_directory_file.save_pixmap_to_cloud(pixmap)
+            return f"Image transférée sur {self.cloud}", QIcon(pixmap)
+
+        if self.clipboard.mimeData().hasText():
+            text = self.clipboard.text()
+            self.service_directory_file.save_text_to_cloud(text)
             self.service_directory_file.file_is_changed = True
-        return message, type_message
+            return f"Texte transféré sur {self.cloud}", self._icons["Clipboard"]
 
     def paste_to_clipboard(self) -> tuple:
         """Colle le contenu du fichier binaire du cloud vers le presse-papier."""
-
         data = self.service_directory_file.read_binary_file()
         header = data[:4]
         if header == b"\x89PNG":
@@ -71,38 +76,36 @@ class ClipboardManager:
             self.clipboard.setImage(image)
             message = "Image collée dans le Presse-papier."
             type_message = QIcon(QPixmap(image))
+            return message, type_message
         else:
+            self.clipboard.setText(data.decode("utf-8"))
             message = "Texte collé dans le Presse-papier."
             type_message = self._icons["Clipboard"]
-            self.clipboard.setText(data.decode("utf-8"))
         return message, type_message
 
     def show_clipboard(self) -> tuple:
-        """Affiche le contenu actuel du presse-papier.
-        """
-
-        message = "Le Presse-papier est vide !!!."
-        type_message = QSystemTrayIcon.Warning # type: ignore
+        """Affiche le contenu actuel du presse-papier."""
+        if not self.clipboard.mimeData().formats():
+            return "Le Presse-papier est vide !!!.", QSystemTrayIcon.Warning  # type: ignore
         if self.clipboard.mimeData().formats():
-            message = None
-            type_message = None
             if self.clipboard.mimeData().hasImage():
                 pixmap = self._get_scaled_pixmap()
                 self._set_pixmap(pixmap)
             else:
                 self._set_text(self.clipboard.text())
             self._show_tooltip()
-        return message, type_message
-    
+        return None, None
+
     def _get_scaled_pixmap(self):
-        return self.clipboard.pixmap().scaledToWidth(350, 
-            Qt.SmoothTransformation | Qt.KeepAspectRatio) # type: ignore
+        return self.clipboard.pixmap().scaledToWidth(
+            350, Qt.SmoothTransformation | Qt.KeepAspectRatio
+        )  # type: ignore
 
     def _set_pixmap(self, pixmap):
         self._tool_tip.setPixmap(pixmap)
 
     def _set_text(self, text):
         self._tool_tip.setText(text)
-    
+
     def _show_tooltip(self):
         self._tool_tip.show()
