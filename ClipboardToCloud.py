@@ -61,7 +61,6 @@ class ClipboardToCloudManager(QMainWindow):
 
     def show_clipboard(self):
         """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
-
         message, type_message = self.clipboard.show_clipboard()
         if message:
             self.show_message(message=message, icon=type_message)
