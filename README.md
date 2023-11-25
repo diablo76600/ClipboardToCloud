@@ -11,3 +11,7 @@ Il utilise l'interface graphique Qt (PyQt5) pour afficher une icône dans la bar
         `Coller dans le presse-papier` : Copie le contenu du fichier du cloud dans le presse-papier.
 
         `Afficher le presse-papier` : Permet d'avoir un apercu rapide du contenu du presse-papier
+
+
+* Transfert d'OSX vers Windows
+  
