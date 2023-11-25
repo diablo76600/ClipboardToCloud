@@ -2,7 +2,6 @@ import sys
 import os
 import time
 from pathlib import Path
-from PyQt5.QtCore import QFile
 
 
 class DirectoryError(Exception):
@@ -58,7 +57,6 @@ class ServiceDirectoryAndFile:
                 with open(self.path_file, "rb") as file:
                     return file.read()
             except (FileNotFoundError, PermissionError):
-                print(QFile(self.path_file).permissions())
                 time.sleep(0.1)
                 self.manager.watcher.addPath(self.path_file)
         
