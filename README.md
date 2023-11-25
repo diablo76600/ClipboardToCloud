@@ -1,4 +1,4 @@
-#`ClipboardToCloud`
+`ClipboardToCloud`
 
 ![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/4c653667-85d3-4e05-bd54-9a7ad8e73c7f)
 

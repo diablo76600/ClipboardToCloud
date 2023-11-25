@@ -75,13 +75,13 @@ class ClipboardManager:
             image = QImage.fromData(data)
             self.clipboard.setImage(image)
             message = "Image collée dans le Presse-papier."
-            type_message = QIcon(QPixmap(image))
-            return message, type_message
+            type_icon = QIcon(QPixmap(image))
+            return message, type_icon
         else:
             self.clipboard.setText(data.decode("utf-8"))
             message = "Texte collé dans le Presse-papier."
-            type_message = self._icons["Clipboard"]
-        return message, type_message
+            type_icon = self._icons["Clipboard"]
+        return message, type_icon
 
     def show_clipboard(self) -> tuple:
         """Affiche le contenu actuel du presse-papier."""
