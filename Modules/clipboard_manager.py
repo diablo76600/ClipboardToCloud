@@ -1,4 +1,3 @@
-import os
 from service_directory_file import ServiceDirectoryAndFile
 from tooltip import ToolTip
 from PyQt5.QtGui import QIcon, QImage, QPixmap
@@ -40,8 +39,8 @@ class ClipboardManager:
                 QPixmap(
                     ServiceDirectoryAndFile.resource_path(f"Assets/{asset_name}.png")
                 ).scaledToWidth(
-                    32, Qt.SmoothTransformation
-                )  # type: ignore
+                    32, Qt.SmoothTransformation  # type: ignore
+                )
             )
 
         return {
@@ -50,7 +49,7 @@ class ClipboardManager:
             "Loupe": get_icon("Loupe"),
         }
 
-    def copy_to_cloud(self) -> tuple:
+    def copy_to_cloud(self) -> tuple:  # type: ignore
         """Copie le contenu du presse-papier vers le fichier binaire sur le cloud."""
 
         if not self.clipboard.mimeData().formats():
@@ -98,8 +97,8 @@ class ClipboardManager:
 
     def _get_scaled_pixmap(self):
         return self.clipboard.pixmap().scaledToWidth(
-            350, Qt.SmoothTransformation | Qt.KeepAspectRatio
-        )  # type: ignore
+            350, Qt.SmoothTransformation | Qt.KeepAspectRatio # type: ignore
+        )  
 
     def _set_pixmap(self, pixmap):
         self._tool_tip.setPixmap(pixmap)
