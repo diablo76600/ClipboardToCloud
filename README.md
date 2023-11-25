@@ -11,3 +11,37 @@ Il utilise l'interface graphique Qt (PyQt5) pour afficher une icône dans la bar
         `Coller dans le presse-papier` : Copie le contenu du fichier du cloud dans le presse-papier.
 
         `Afficher le presse-papier` : Permet d'avoir un apercu rapide du contenu du presse-papier
+
+
+![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/1d300cc9-4cbd-4ae3-8f14-a2ca7bad05b7)
+
+* Menu Linux
+
+  
+![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/acecae53-9ef5-48ac-8839-1b27eaf81bc4)
+
+* Menu OSX
+
+  
+![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/d6fa53f7-ec66-44e0-b3df-9cdfa81265aa)
+
+* Menu Windows
+
+  
+![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/b5340bc3-6967-4b00-a053-83e9c1cdecc9)
+
+
+
+
+* Notifications
+
+
+![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/72365cb5-b8ab-4f9b-9c50-3045d457ad1d)
+
+
+
+![image](https://github.com/diablo76600/ClipboardToCloud/assets/3962168/f8338d3b-5a89-4334-ab44-3f29df572dd1)
+
+
+
+
