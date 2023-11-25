@@ -5,7 +5,7 @@ from service_directory_file import ServiceDirectoryAndFile
 class FileWatcher(QFileSystemWatcher):
     """Surveillance des modifications du fichier binaire sur le cloud."""
 
-    def __init__(self, path_file: str, manager, service: ServiceDirectoryAndFile) -> None:
+    def __init__(self, path_cloud: str, manager, service: ServiceDirectoryAndFile) -> None:
         """Constructeur
 
         Args:
@@ -14,9 +14,9 @@ class FileWatcher(QFileSystemWatcher):
             service (ServiceDirectoryAndFile): Instance de la classe ServiceDirectoryAndFile.
         """
         super().__init__()
-        self.path_file = path_file
-        self.addPath(self.path_file)
-        self.fileChanged.connect(self.file_changed)
+        self.path_cloud = path_cloud
+        self.addPath(self.path_cloud)
+        self.directoryChanged.connect(self.file_changed)
         self.service_directory_file = service
         self.manager = manager
 

@@ -45,7 +45,7 @@ class ClipboardToCloudManager(QMainWindow):
         self.tray = TrayIcon(app=app, manager=self, title=TITLE, cloud=CLOUD)
         self.directory_exist_and_create_file()
         self.watcher = FileWatcher(
-            path_file=PATH_FILE, manager=self, service=self.service_directory_file
+            path_cloud=PATH_CLOUD, manager=self, service=self.service_directory_file
         )
         super().__init__()
 
