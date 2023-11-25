@@ -51,20 +51,18 @@ class ClipboardToCloudManager(QMainWindow):
 
     def copy_to_cloud(self) -> None:
         """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
-        self.perform_clipboard_action("copy_to_cloud")
+        message, type_message = self.clipboard.copy_to_cloud()
+        self.show_message(message=message, icon=type_message)
 
     def paste_to_clipboard(self) -> None:
         """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
-        self.perform_clipboard_action("paste_to_clipboard")
+        message, type_message = self.clipboard.paste_to_clipboard()
+        self.show_message(message=message, icon=type_message)
 
-    def show_clipboard(self) -> None:
+    def show_clipboard(self):
         """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
-        self.perform_clipboard_action(action="show_clipboard")
 
-    def perform_clipboard_action(self, action: str) -> None:
-        """Performs a clipboard action and displays any message"""
-        method = getattr(self.clipboard, action)
-        message, type_message = method()
+        message, type_message = self.clipboard.show_clipboard()
         if message:
             self.show_message(message=message, icon=type_message)
 

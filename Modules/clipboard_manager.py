@@ -55,6 +55,8 @@ class ClipboardManager:
         if not self.clipboard.mimeData().formats():
             return "Le Presse-papier est vide !!!.", QSystemTrayIcon.Warning  # type: ignore
 
+        self.service_directory_file.file_is_changed = True
+
         if self.clipboard.mimeData().hasImage():
             pixmap = self.clipboard.pixmap()
             self.service_directory_file.save_pixmap_to_cloud(pixmap)
@@ -63,7 +65,6 @@ class ClipboardManager:
         if self.clipboard.mimeData().hasText():
             text = self.clipboard.text()
             self.service_directory_file.save_text_to_cloud(text)
-            self.service_directory_file.file_is_changed = True
             return f"Texte transféré sur {self.cloud}", self._icons["Clipboard"]
 
     def paste_to_clipboard(self) -> tuple:
@@ -97,8 +98,8 @@ class ClipboardManager:
 
     def _get_scaled_pixmap(self):
         return self.clipboard.pixmap().scaledToWidth(
-            350, Qt.SmoothTransformation | Qt.KeepAspectRatio # type: ignore
-        )  
+            350, Qt.SmoothTransformation | Qt.KeepAspectRatio  # type: ignore
+        )
 
     def _set_pixmap(self, pixmap):
         self._tool_tip.setPixmap(pixmap)
