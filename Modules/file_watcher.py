@@ -20,7 +20,7 @@ class FileWatcher(QFileSystemWatcher):
         self.service_directory_file = service
         self.manager = manager
 
-    def file_changed(self):
+    def file_changed(self) -> None:
         """Controle des modification du fichier binaire"""
         if not self.service_directory_file.file_is_changed:
             self.manager.paste_to_clipboard()
