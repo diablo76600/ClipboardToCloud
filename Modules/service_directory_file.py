@@ -55,10 +55,12 @@ class ServiceDirectoryAndFile:
         while True:
             try:
                 with open(self.path_file, "rb") as file:
+                    if len(self.manager.watcher.files()) == 0:
+                        self.manager.watcher.addPath(self.path_file)
                     return file.read()
             except (FileNotFoundError, PermissionError):
                 time.sleep(0.1)
-                self.manager.watcher.addPath(self.path_file)
+                
         
     def save_pixmap_to_cloud(self, pixmap) -> None:
         """Enregistrement du QPixmap sur le cloud"""
