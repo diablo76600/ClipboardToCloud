@@ -23,8 +23,8 @@ CLOUD = "Dropbox"
 # Pour utiliser Google Drive :
 # CLOUD = "Mon Drive"
 HOME = os.path.expanduser("~")
-PATH_CLOUD = f"{HOME}{os.sep}{CLOUD}{os.sep}.ClipboardToCloud{os.sep}"
-PATH_FILE = f"{PATH_CLOUD}clipboard.data"
+PATH_CLOUD = os.path.join(HOME, CLOUD, ".ClipboardToCloud")
+PATH_FILE = os.path.join(PATH_CLOUD, "clipboard.data")
 TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 
