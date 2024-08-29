@@ -8,7 +8,7 @@ from Modules.service_directory_file import ServiceDirectoryAndFile
 class SplashScreen(QSplashScreen):
     def __init__(self, title: str) -> None:
         super().__init__()
-        self.setFont(QFont("Times", 30))
+        self.setFont(QFont("Times", 20))
         self.pixmap = QPixmap(
             ServiceDirectoryAndFile.resource_path("Assets/Clipboard.png")
         )
