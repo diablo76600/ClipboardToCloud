@@ -29,61 +29,61 @@ TITLE = f"Clipboard To {CLOUD} {VERSION}"
 
 
 class ClipboardToCloudManager(QMainWindow):
-    """Gestionnaire de l'application et des interactions avec l'utilisateur."""
+	"""Gestionnaire de l'application et des interactions avec l'utilisateur."""
 
-    def __init__(self) -> None:
-        """Constructeur"""
-        self.service_directory_file = ServiceDirectoryAndFile(
-            path_cloud=PATH_CLOUD, manager=self, path_file=PATH_FILE, title=TITLE
-        )
-        self.clipboard = ClipboardManager(
-            app=app,
-            service=self.service_directory_file,
-            path_file=PATH_FILE,
-            cloud=CLOUD,
-        )
-        self.tray = TrayIcon(app=app, manager=self, title=TITLE, cloud=CLOUD)
-        self.directory_exist_and_create_file()
-        self.watcher = FileWatcher(
-            path_file=PATH_FILE, manager=self, service=self.service_directory_file
-        )
-        super().__init__()
+	def __init__(self) -> None:
+		"""Constructeur"""
+		self.service_directory_file = ServiceDirectoryAndFile(
+	        path_cloud=PATH_CLOUD, manager=self, path_file=PATH_FILE, title=TITLE
+	)
+		self.clipboard = ClipboardManager(
+	        app=app,
+	    service=self.service_directory_file,
+	    path_file=PATH_FILE,
+	    cloud=CLOUD,
+	)
+		self.tray = TrayIcon(app=app, manager=self, title=TITLE, cloud=CLOUD)
+		self.directory_exist_and_create_file()
+		self.watcher = FileWatcher(
+	        path_file=PATH_FILE, manager=self, service=self.service_directory_file
+	)
+		super().__init__()
 
-    def copy_to_cloud(self) -> None:
-        """Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
-        message, type_icon = self.clipboard.copy_to_cloud()
-        self.show_message(message=message, icon=type_icon)
+	def copy_to_cloud(self) -> None:
+		"""Appel de la méthode copy_to_cloud() de l'objet clipboard de la classe Clipboard."""
+		message, type_icon = self.clipboard.copy_to_cloud()
+		self.show_message(message=message, icon=type_icon)
 
-    def paste_to_clipboard(self) -> None:
-        """Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
-        message, type_icon = self.clipboard.paste_to_clipboard()
-        self.show_message(message=message, icon=type_icon)
+	def paste_to_clipboard(self) -> None:
+		"""Appel de la méthode paste_to_clipboard() de l'objet clipboard de la classe Clipboard."""
+		message, type_icon = self.clipboard.paste_to_clipboard()
+		self.show_message(message=message, icon=type_icon)
 
-    def show_clipboard(self):
-        """Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
-        message, type_icon = self.clipboard.show_clipboard()
-        if message:
-            self.show_message(message=message, icon=type_icon)
+	def show_clipboard(self):
+		"""Appel de la méthode show_clipboard() de l'objet clipboard de la classe Clipboard."""
+		message, type_icon = self.clipboard.show_clipboard()
+		if message:
+			self.show_message(message=message, icon=type_icon)
 
-    def show_message(self, message: str, icon: QIcon, duration: int = 3000) -> None:
-        """Affichage de la notification avec une durée de 3 secondes par défaut."""
-        self.tray.showMessage(TITLE, message, icon, duration)
+	def show_message(self, message: str, icon: QIcon, duration: int = 3000) -> None:
+		"""Affichage de la notification avec une durée de 3 secondes par défaut."""
+		self.tray.showMessage(TITLE, message, icon, duration)
 
-    def directory_exist_and_create_file(self) -> None:
-        """Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
-        try:
-            self.service_directory_file.directory_exist_and_create_file_with_title()
-        except DirectoryError as err:
-            QMessageBox.warning(
-                self.tray.widget_messagebox,
-                self.service_directory_file.title,
-                err.message,
-            )
-            sys.exit()
+	def directory_exist_and_create_file(self) -> None:
+		"""Vérifie l'existence du répertoire sur le cloud et création du fichier binaire."""
+		try:
+			self.service_directory_file.directory_exist_and_create_file_with_title()
+		except DirectoryError as err:
+			QMessageBox.warning(
+	            self.tray.widget_messagebox,
+	        self.service_directory_file.title,
+	        err.message,
+	    )
+			sys.exit()
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    SplashScreen(title=TITLE)
-    manager = ClipboardToCloudManager()
-    sys.exit(app.exec_())
+	app = QApplication(sys.argv)
+	SplashScreen(title=TITLE)
+	manager = ClipboardToCloudManager()
+	sys.exit(app.exec_())
